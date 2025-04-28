@@ -15,6 +15,9 @@ export default function Home() {
       setIsAuthenticated(true)
     }
     setIsLoading(false)
+
+    // Update document title for consistent branding
+    document.title = "Document Generator | Gencore IT Solutions"
   }, [])
 
   const handleLogin = (status: boolean) => {

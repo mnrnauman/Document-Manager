@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -19,6 +19,11 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
   const [error, setError] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
+  useEffect(() => {
+    // Update document title for consistent branding
+    document.title = "Secure Login | Gencore IT Solutions"
+  }, [])
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
@@ -30,6 +35,8 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
         // Store authentication in session storage
         sessionStorage.setItem("gencoreAuth", "true")
         onLogin(true)
+        // Update title after successful login
+        document.title = "Document Generator | Gencore IT Solutions"
       } else {
         setError("Invalid username or password. Please try again.")
         setIsLoading(false)
