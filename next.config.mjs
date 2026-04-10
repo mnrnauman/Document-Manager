@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
   eslint: {
     ignoreDuringBuilds: true,
   },
@@ -12,6 +11,7 @@ const nextConfig = {
     domains: ['hebbkx1anhila5yf.public.blob.vercel-storage.com', 'document.gencoreit.com'],
     unoptimized: true,
   },
+  allowedDevOrigins: ['*.replit.dev', '*.kirk.replit.dev', '*.repl.co'],
   async headers() {
     return [
       {
@@ -19,7 +19,7 @@ const nextConfig = {
         headers: [
           {
             key: 'X-Frame-Options',
-            value: 'DENY',
+            value: 'SAMEORIGIN',
           },
           {
             key: 'X-Content-Type-Options',
@@ -37,8 +37,6 @@ const nextConfig = {
       },
     ];
   },
-  // Ensure the app knows about the custom domain
-  assetPrefix: process.env.NODE_ENV === 'production' ? 'https://document.gencoreit.com' : undefined,
   basePath: '',
 };
 

@@ -1,16 +1,17 @@
 "use client"
 
 import type React from "react"
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
-import { Download, Save, FileUp, Printer, Plus, Trash2, Eye, FileSpreadsheet } from "lucide-react"
+import { Download, Save, FileUp, Printer, Plus, Trash2, Eye } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { generatePDF } from "@/utils/pdf-generator"
+import { catalogItems } from "@/lib/predefined-items"
 
 interface InvoiceItem {
   id: string
@@ -20,189 +21,25 @@ interface InvoiceItem {
   unitPrice: number
 }
 
-// Sample data for random generation
-const sampleCompanies = [
-  "Tech Solutions Inc.",
-  "Global Innovations",
-  "Digital Dynamics",
-  "Future Systems",
-  "Smart Technologies",
-  "Nexus Computing",
-  "Apex IT Solutions",
-  "Quantum Networks",
-  "Cyber Systems",
-  "Elite Technologies",
-  "Prime Computing",
-  "Stellar IT",
-]
-
-const sampleNames = [
-  "John Smith",
-  "Sarah Johnson",
-  "Michael Brown",
-  "Emily Davis",
-  "David Wilson",
-  "Jennifer Taylor",
-  "Robert Anderson",
-  "Lisa Thomas",
-  "James Jackson",
-  "Jessica White",
-]
-
-const sampleAddresses = [
-  "123 Main St, Cityville",
-  "456 Park Ave, Townsburg",
-  "789 Oak Rd, Villageton",
-  "321 Pine Blvd, Metropolis",
-  "654 Maple Dr, Hamletville",
-  "987 Cedar Ln, Boroughtown",
-]
-
-const sampleEmails = [
-  "contact@example.com",
-  "info@company.com",
-  "support@business.org",
-  "hello@enterprise.net",
-  "office@corporation.com",
-  "admin@firm.co",
-]
-
-const samplePhones = [
-  "+1 (555) 123-4567",
-  "+1 (555) 987-6543",
-  "+1 (555) 456-7890",
-  "+1 (555) 789-0123",
-  "+1 (555) 234-5678",
-  "+1 (555) 876-5432",
-]
-
-const sampleBanks = [
-  "First National Bank",
-  "Global Banking Corp",
-  "City Financial",
-  "United Trust Bank",
-  "Premier Banking Services",
-  "Secure Trust & Savings",
-  "Metropolitan Bank",
-]
-
-const sampleProducts = [
-  {
-    name: "Dell PowerEdge R740 Server",
-    description: "Refurbished, 2x Intel Xeon Gold 6248R, 128GB RAM, 8x 1.2TB SAS HDD, 2x 750W PSU",
-    price: 4500,
-  },
-  {
-    name: "HP ProLiant DL380 Gen10 Server",
-    description: "New, 2x Intel Xeon Silver 4210R, 64GB RAM, 4x 1.2TB SAS HDD, 2x 800W PSU, 3-Year Warranty",
-    price: 6200,
-  },
-  {
-    name: "Cisco Catalyst 9300 Switch",
-    description: "New, 24-port PoE+, Network Advantage, 1100WAC power supply",
-    price: 3200,
-  },
-  {
-    name: "Cisco Meraki MX68 Security Appliance",
-    description: "New, Advanced Security License, 5-Year Enterprise License",
-    price: 3800,
-  },
-  {
-    name: "Fortinet FortiGate 100F Firewall",
-    description: "New, Next-Generation Firewall with 1-Year FortiGuard UTM Protection",
-    price: 5800,
-  },
-  {
-    name: "HP EliteBook 840 G8 Laptop",
-    description: 'New, Intel Core i7-1165G7, 16GB RAM, 512GB SSD, 14" FHD Display, Windows 11 Pro',
-    price: 1200,
-  },
-  {
-    name: "Dell Latitude 5420 Laptop",
-    description: 'New, Intel Core i5-1145G7, 16GB RAM, 512GB SSD, 14" FHD Display, Windows 11 Pro, 3-Year ProSupport',
-    price: 1100,
-  },
-  {
-    name: "Ubiquiti UniFi AP AC Pro",
-    description: "New, Dual-Band Access Point, PoE Powered, Indoor/Outdoor Use",
-    price: 149,
-  },
-  {
-    name: "Network Installation & Configuration",
-    description:
-      "Professional installation and configuration of network equipment, including cabling, testing, and documentation",
-    price: 2500,
-  },
-  {
-    name: "IT Infrastructure Assessment & Planning",
-    description:
-      "Comprehensive assessment of current IT infrastructure, security audit, and strategic planning for future growth",
-    price: 4500,
-  },
-  {
-    name: "Lenovo ThinkPad X1 Carbon",
-    description: 'New, Intel Core i7-1165G7, 16GB RAM, 1TB SSD, 14" 4K Display, Windows 11 Pro',
-    price: 1800,
-  },
-  {
-    name: "Microsoft Surface Laptop 4",
-    description: 'New, AMD Ryzen 7, 16GB RAM, 512GB SSD, 15" Touchscreen, Windows 11 Pro',
-    price: 1400,
-  },
-  {
-    name: 'Apple MacBook Pro 16"',
-    description: 'New, M1 Pro chip, 16GB RAM, 512GB SSD, 16" Retina Display, macOS Monterey',
-    price: 2400,
-  },
-  {
-    name: "Synology DS1621+ NAS",
-    description: "New, 6-bay NAS, AMD Ryzen V1500B, 4GB DDR4, Expandable up to 16 bays",
-    price: 900,
-  },
-  {
-    name: "QNAP TS-h973AX NAS",
-    description: "New, 9-bay NAS, AMD Ryzen V1500B, 8GB DDR4, 10GbE networking",
-    price: 1200,
-  },
-  {
-    name: "WD Red Pro 14TB NAS Hard Drive",
-    description: "New, CMR Technology, 7200 RPM, 5-year warranty, Designed for NAS systems",
-    price: 450,
-  },
-  {
-    name: "Samsung 870 QVO 8TB SSD",
-    description: "New, SATA III, 560MB/s read, 530MB/s write, 3-year warranty",
-    price: 700,
-  },
-  {
-    name: "APC Smart-UPS 1500VA LCD",
-    description: "New, 1000W, 120V, Line Interactive, 8 outlets, Network management card",
-    price: 800,
-  },
-  {
-    name: "Tripp Lite 2200VA UPS",
-    description: "New, 1920W, Smart LCD, Line Interactive, 8 outlets, USB/Serial",
-    price: 650,
-  },
-  {
-    name: "Annual IT Support Contract",
-    description: "24/7 remote support, monthly on-site visits, quarterly system audits, priority response",
-    price: 12000,
-  },
-]
-
 export default function InvoiceEditor() {
   const { toast } = useToast()
   const printRef = useRef<HTMLDivElement>(null)
   const previewRef = useRef<HTMLDivElement>(null)
   const [previewOpen, setPreviewOpen] = useState(false)
-  const [fillItemsCount, setFillItemsCount] = useState(15)
-  const [showFillDialog, setShowFillDialog] = useState(false)
+  const [catalogValue, setCatalogValue] = useState("")
 
   const [formData, setFormData] = useState({
-    invoiceNumber: "INV-" + new Date().getFullYear() + "-" + String(Math.floor(Math.random() * 1000)).padStart(3, "0"),
-    date: new Date().toISOString().split("T")[0],
-    dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+    invoiceNumber: "",
+    date: "",
+    dueDate: "",
+    companyInfo: {
+      address: "4th Floor, Saeed Alam Tower, Liberty Market, Lahore",
+      phone: "+92 332 0000911",
+      email: "nauman@gencoreit.com",
+      website: "www.gencoreit.com",
+      description:
+        "Providing New and Used IT Equipment including Servers, Laptops, Systems, Firewalls, Routers, and Switches, along with comprehensive IT Solutions.",
+    },
     client: {
       name: "",
       company: "",
@@ -230,23 +67,34 @@ export default function InvoiceEditor() {
     notes: "Thank you for your business. Payment is due within 30 days of invoice date.",
   })
 
+  useEffect(() => {
+    const today = new Date()
+    const dueDate = new Date(today)
+    dueDate.setDate(dueDate.getDate() + 30)
+    setFormData((prev) => ({
+      ...prev,
+      invoiceNumber: "INV-" + today.getFullYear() + "-" + String(Math.floor(Math.random() * 900) + 100),
+      date: today.toISOString().split("T")[0],
+      dueDate: dueDate.toISOString().split("T")[0],
+    }))
+  }, [])
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-
     if (name.includes(".")) {
-      const [parent, child] = name.split(".")
-      setFormData({
-        ...formData,
-        [parent]: {
-          ...(formData[parent as keyof typeof formData] as Record<string, unknown>),
-          [child]: value,
-        },
-      })
+      const parts = name.split(".")
+      if (parts.length === 2) {
+        const [parent, child] = parts
+        setFormData({
+          ...formData,
+          [parent]: {
+            ...(formData[parent as keyof typeof formData] as Record<string, unknown>),
+            [child]: value,
+          },
+        })
+      }
     } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      })
+      setFormData({ ...formData, [name]: value })
     }
   }
 
@@ -263,7 +111,7 @@ export default function InvoiceEditor() {
       items: [
         ...formData.items,
         {
-          id: `item-${formData.items.length + 1}`,
+          id: `item-${Date.now()}`,
           name: "",
           description: "",
           quantity: 1,
@@ -273,118 +121,48 @@ export default function InvoiceEditor() {
     })
   }
 
-  const removeItem = (id: string) => {
-    if (formData.items.length > 1) {
-      setFormData({
-        ...formData,
-        items: formData.items.filter((item) => item.id !== id),
-      })
-    } else {
-      toast({
-        title: "Cannot remove item",
-        description: "You must have at least one item in the invoice",
-        variant: "destructive",
-      })
-    }
-  }
-
-  const calculateSubtotal = () => {
-    return formData.items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0)
-  }
-
-  const calculateTax = () => {
-    return calculateSubtotal() * (formData.taxRate / 100)
-  }
-
-  const calculateTotal = () => {
-    return calculateSubtotal() + calculateTax()
-  }
-
-  // Updated to use PKR currency
-  const formatCurrency = (amount: number) => {
-    return "PKR " + new Intl.NumberFormat("en-PK").format(amount)
-  }
-
-  // Random data generation function
-  const getRandomItem = (array: any[]) => {
-    return array[Math.floor(Math.random() * array.length)]
-  }
-
-  const fillRandomData = (itemCount = 15) => {
-    // Generate random client info
-    const randomClient = {
-      name: getRandomItem(sampleNames),
-      company: getRandomItem(sampleCompanies),
-      address: getRandomItem(sampleAddresses),
-      phone: getRandomItem(samplePhones),
-      email: getRandomItem(sampleEmails),
-    }
-
-    // Generate random bank details
-    const randomBank = {
-      bankName: getRandomItem(sampleBanks),
-      accountTitle: "Gencore IT Solutions",
-      iban:
-        "PK" +
-        Math.floor(Math.random() * 1000000000000000)
-          .toString()
-          .padStart(16, "0"),
-      accountNumber: Math.floor(Math.random() * 10000000000)
-        .toString()
-        .padStart(10, "0"),
-      swiftCode:
-        "SWIFT" +
-        Math.floor(Math.random() * 1000)
-          .toString()
-          .padStart(4, "0"),
-    }
-
-    // Generate random items
-    const randomItems: InvoiceItem[] = []
-    for (let i = 0; i < itemCount; i++) {
-      const product = getRandomItem(sampleProducts)
-      randomItems.push({
-        id: `item-${i + 1}`,
-        name: product.name,
-        description: product.description,
-        quantity: Math.floor(Math.random() * 5) + 1,
-        unitPrice: product.price,
-      })
-    }
-
-    // Update form data with random values
+  const addFromCatalog = (catalogIndex: string) => {
+    const idx = parseInt(catalogIndex, 10)
+    if (isNaN(idx) || idx < 0) return
+    const product = catalogItems[idx]
     setFormData({
       ...formData,
-      invoiceNumber:
-        "INV-" + new Date().getFullYear() + "-" + String(Math.floor(Math.random() * 1000)).padStart(3, "0"),
-      client: randomClient,
-      items: randomItems,
-      bankDetails: randomBank,
+      items: [
+        ...formData.items,
+        {
+          id: `item-${Date.now()}`,
+          name: product.name,
+          description: product.description,
+          quantity: 1,
+          unitPrice: product.price,
+        },
+      ],
     })
-
-    setShowFillDialog(false)
-
-    toast({
-      title: "Random Data Generated",
-      description: `Generated invoice with ${itemCount} random items`,
-    })
+    setCatalogValue("")
+    toast({ title: "Item added", description: `${product.name} added to invoice` })
   }
 
-  // Improved PDF generation using our utility
+  const removeItem = (id: string) => {
+    if (formData.items.length > 1) {
+      setFormData({ ...formData, items: formData.items.filter((item) => item.id !== id) })
+    } else {
+      toast({ title: "Cannot remove item", description: "You must have at least one item", variant: "destructive" })
+    }
+  }
+
+  const calculateSubtotal = () => formData.items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0)
+  const calculateTax = () => calculateSubtotal() * (formData.taxRate / 100)
+  const calculateTotal = () => calculateSubtotal() + calculateTax()
+  const formatCurrency = (amount: number) => "PKR " + new Intl.NumberFormat("en-PK").format(amount)
+
   const handleDownloadPDF = async () => {
-    if (previewRef.current) {
+    const element = previewRef.current || printRef.current
+    if (element) {
       try {
-        await generatePDF(previewRef.current, `Invoice_${formData.invoiceNumber}.pdf`)
-        toast({
-          title: "PDF Generated",
-          description: "Your invoice has been downloaded successfully",
-        })
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: "Failed to generate PDF. Please try again.",
-          variant: "destructive",
-        })
+        await generatePDF(element, `Invoice_${formData.invoiceNumber}.pdf`)
+        toast({ title: "PDF Generated", description: "Your invoice has been downloaded successfully" })
+      } catch {
+        toast({ title: "Error", description: "Failed to generate PDF. Please try again.", variant: "destructive" })
       }
     }
   }
@@ -392,368 +170,389 @@ export default function InvoiceEditor() {
   const handlePrint = () => {
     if (printRef.current) {
       const printContent = printRef.current.innerHTML
-      const originalContent = document.body.innerHTML
-
-      document.body.innerHTML = `
-        <html>
-          <head>
-            <title>Print Invoice</title>
-            <style>
-              body { font-family: Arial, sans-serif; }
-              @page { size: A4; margin: 15mm; }
-              
-              /* Add page break after 8 items */
-              .page-break { page-break-after: always; }
-              
-              /* Hide URLs */
-              a { text-decoration: none; color: inherit; }
-            </style>
-          </head>
-          <body>
-            ${printContent}
-          </body>
-        </html>
-      `
-
-      window.print()
-      document.body.innerHTML = originalContent
-      window.location.reload()
+      const printWindow = window.open("", "_blank")
+      if (printWindow) {
+        const styleSheets = Array.from(document.querySelectorAll("style, link[rel='stylesheet']"))
+          .map((el) => el.outerHTML)
+          .join("\n")
+        printWindow.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Invoice</title>${styleSheets}<style>@media print{@page{size:A4;margin:10mm;}body{margin:0;background:white;}}</style></head><body style="background:white;">${printContent}</body></html>`)
+        printWindow.document.close()
+        printWindow.focus()
+        setTimeout(() => { printWindow.print(); printWindow.close() }, 1200)
+      }
     }
   }
 
   const handleSave = () => {
-    const savedData = JSON.stringify(formData)
-    localStorage.setItem("invoice_draft", savedData)
-    toast({
-      title: "Draft saved",
-      description: "Your invoice draft has been saved locally",
-    })
+    localStorage.setItem("invoice_draft", JSON.stringify(formData))
+    toast({ title: "Draft saved", description: "Your invoice draft has been saved locally" })
   }
 
   const handleLoad = () => {
     const savedData = localStorage.getItem("invoice_draft")
     if (savedData) {
-      setFormData(JSON.parse(savedData))
-      toast({
-        title: "Draft loaded",
-        description: "Your saved invoice draft has been loaded",
-      })
+      try {
+        setFormData(JSON.parse(savedData))
+        toast({ title: "Draft loaded", description: "Your saved invoice draft has been loaded" })
+      } catch {
+        localStorage.removeItem("invoice_draft")
+        toast({ title: "Load failed", description: "Saved draft was corrupted and has been cleared", variant: "destructive" })
+      }
     } else {
-      toast({
-        title: "No saved draft",
-        description: "No saved invoice draft was found",
-        variant: "destructive",
-      })
+      toast({ title: "No saved draft", description: "No saved invoice draft was found", variant: "destructive" })
     }
   }
 
-  // Determine if we need a page break based on item count
-  const needsPageBreak = formData.items.length > 8
+  const PreviewContent = ({ forPDF = false }: { forPDF?: boolean }) => {
+    const p = forPDF ? "p-1 px-2" : "py-2 px-3"
+    const rowText = "text-xs"
+    return (
+    <div className={forPDF ? "print-optimized bg-white" : "w-full p-6"} style={forPDF ? { padding: "20px 28px", fontSize: "11px" } : {}}>
+      {/* Header */}
+      <div className={`flex justify-between items-start border-b ${forPDF ? "pb-2 mb-1" : "pb-4 mb-2"}`}>
+        <div className="flex items-center gap-2">
+          <Image
+            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Right%20Logo-pcG5xhUOcBvEaMtBemNZplMKUox6rR.png"
+            alt="Gencore IT Solutions Logo"
+            width={forPDF ? 40 : 55}
+            height={forPDF ? 40 : 55}
+            className="object-contain"
+          />
+          <div>
+            <h1 className={`font-bold text-[#1e40af] ${forPDF ? "text-base" : "text-2xl"}`}>Gencore IT Solutions</h1>
+            <p className="text-[#f97316] font-medium" style={forPDF ? { fontSize: "10px" } : { fontSize: "12px" }}>Next Generation Core IT Solutions</p>
+          </div>
+        </div>
+        <div className="text-right text-gray-600" style={{ fontSize: "10px" }}>
+          <p>{formData.companyInfo.address}</p>
+          <p>Phone: {formData.companyInfo.phone}</p>
+          <p>Email: {formData.companyInfo.email}</p>
+          {formData.companyInfo.website && <p>{formData.companyInfo.website}</p>}
+        </div>
+      </div>
+
+      {/* Description */}
+      <div className={`text-gray-600 ${forPDF ? "my-1" : "my-3"}`} style={{ fontSize: "10px" }}>
+        <p>{formData.companyInfo.description}</p>
+      </div>
+
+      {/* Title */}
+      <div className={`text-center ${forPDF ? "my-2" : "my-3"}`}>
+        <h2 className={`font-bold text-[#1e40af] uppercase ${forPDF ? "text-base" : "text-xl"}`}>Invoice</h2>
+      </div>
+
+      {/* Client + Invoice details */}
+      <div className={`flex justify-between gap-3 ${forPDF ? "mb-2" : "mb-4"}`}>
+        <div className={`bg-gray-50 rounded-md border border-gray-100 flex-1 ${forPDF ? "p-2" : "p-3"}`}>
+          <h3 className={`font-semibold text-[#1e40af] ${forPDF ? "text-xs mb-0.5" : "text-sm mb-1"}`}>Bill To:</h3>
+          <div className="space-y-0" style={{ fontSize: "10px" }}>
+            <p><span className="font-medium">Client Name:</span> {formData.client.name || "________________"}</p>
+            <p><span className="font-medium">Company:</span> {formData.client.company || "________________"}</p>
+            <p><span className="font-medium">Address:</span> {formData.client.address || "________________"}</p>
+            <p><span className="font-medium">Phone:</span> {formData.client.phone || "________________"}</p>
+            <p><span className="font-medium">Email:</span> {formData.client.email || "________________"}</p>
+          </div>
+        </div>
+        <div className={`bg-gray-50 rounded-md border border-gray-100 w-1/3 ${forPDF ? "p-2" : "p-3"}`}>
+          <h3 className={`font-semibold text-[#1e40af] ${forPDF ? "text-xs mb-0.5" : "text-sm mb-1"}`}>Invoice Details:</h3>
+          <div className="grid grid-cols-2 gap-x-1" style={{ fontSize: "10px" }}>
+            <p className="font-medium">Invoice Number:</p>
+            <p>{formData.invoiceNumber}</p>
+            <p className="font-medium">Date Issued:</p>
+            <p>{formData.date ? new Date(formData.date).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) : ""}</p>
+            <p className="font-medium">Due Date:</p>
+            <p>{formData.dueDate ? new Date(formData.dueDate).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) : ""}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Items table */}
+      <div className={forPDF ? "mb-2" : "mb-4"}>
+        <table className="w-full border-collapse">
+          <thead>
+            <tr>
+              <th className={`${p} text-left bg-[#1e40af] text-white font-semibold w-10 ${rowText}`}>SR#</th>
+              <th className={`${p} text-left bg-[#1e40af] text-white font-semibold w-1/2 ${rowText}`}>Item Description</th>
+              <th className={`${p} text-center bg-[#1e40af] text-white font-semibold w-1/6 ${rowText}`}>Qty</th>
+              <th className={`${p} text-right bg-[#1e40af] text-white font-semibold w-1/6 ${rowText}`}>Unit Price</th>
+              <th className={`${p} text-right bg-[#1e40af] text-white font-semibold w-1/6 ${rowText}`}>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {formData.items.map((item, index) => (
+              <tr key={item.id} className="border-b border-gray-200">
+                <td className={`${p} text-center text-gray-700 ${rowText}`}>{index + 1}</td>
+                <td className={`${p} text-gray-700 ${rowText}`}>
+                  <p className="font-medium leading-tight">{item.name || "Item Name"}</p>
+                  {item.description && <p className="text-gray-500 leading-tight" style={{ fontSize: "9px" }}>{item.description}</p>}
+                </td>
+                <td className={`${p} text-center text-gray-700 ${rowText}`}>{item.quantity}</td>
+                <td className={`${p} text-right text-gray-700 ${rowText}`}>{formatCurrency(item.unitPrice)}</td>
+                <td className={`${p} text-right text-gray-700 ${rowText}`}>{formatCurrency(item.quantity * item.unitPrice)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Totals */}
+      <div className={`flex justify-end ${forPDF ? "mb-2" : "mb-4"}`}>
+        <div className={`w-1/3 bg-gray-50 rounded-md border border-gray-100 ${forPDF ? "p-1.5" : "p-3"}`}>
+          <div className={`flex justify-between border-b border-gray-200 ${rowText} ${forPDF ? "py-0.5" : "py-1"}`}>
+            <span className="font-medium text-gray-700">Subtotal:</span>
+            <span className="text-gray-700">{formatCurrency(calculateSubtotal())}</span>
+          </div>
+          <div className={`flex justify-between border-b border-gray-200 ${rowText} ${forPDF ? "py-0.5" : "py-1"}`}>
+            <span className="font-medium text-gray-700">Tax ({formData.taxRate}%):</span>
+            <span className="text-gray-700">{formatCurrency(calculateTax())}</span>
+          </div>
+          <div className={`flex justify-between font-bold ${rowText} ${forPDF ? "py-0.5" : "py-1"}`}>
+            <span className="text-[#1e40af]">Grand Total:</span>
+            <span className="text-[#1e40af]">{formatCurrency(calculateTotal())}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Payment Instructions */}
+      <div className={forPDF ? "mb-2" : "mb-4"}>
+        <h3 className={`font-semibold text-[#1e40af] ${forPDF ? "text-xs mb-0.5" : "text-sm mb-1"}`}>Payment Instructions</h3>
+        <div className="grid grid-cols-2 gap-x-4 gap-y-0" style={{ fontSize: "10px" }}>
+          <div><span className="font-medium">Bank Name:</span> {formData.bankDetails.bankName || "________________"}</div>
+          <div><span className="font-medium">Account Title:</span> {formData.bankDetails.accountTitle || "________________"}</div>
+          <div><span className="font-medium">Account Number:</span> {formData.bankDetails.accountNumber || "________________"}</div>
+          <div><span className="font-medium">IBAN:</span> {formData.bankDetails.iban || "________________"}</div>
+          <div><span className="font-medium">Swift Code:</span> {formData.bankDetails.swiftCode || "________________"}</div>
+        </div>
+      </div>
+
+      {/* Notes */}
+      <div className={forPDF ? "mb-2" : "mb-4"}>
+        <h3 className={`font-semibold text-[#1e40af] ${forPDF ? "text-xs mb-0.5" : "text-sm mb-1"}`}>Notes</h3>
+        <p className="text-gray-600" style={{ fontSize: "10px" }}>{formData.notes}</p>
+      </div>
+
+      {/* Footer */}
+      <div className={`pt-2 border-t border-gray-200 text-center ${forPDF ? "mt-3" : "mt-6"}`}>
+        <p className={`text-[#1e40af] font-medium ${rowText}`}>Next Generation Core IT Solutions</p>
+        <p className="text-gray-500 mt-0.5" style={{ fontSize: "10px" }}>
+          {formData.companyInfo.phone} | {formData.companyInfo.email} | {formData.companyInfo.website}
+        </p>
+      </div>
+    </div>
+    )
+  }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {/* Left panel: Form */}
       <div className="lg:col-span-1 space-y-6">
         <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
           <h2 className="text-lg font-semibold text-[#1e40af] mb-4">Invoice Details</h2>
 
           <div className="space-y-4">
-            <div className="flex justify-between">
-              <h3 className="text-md font-medium text-[#1e40af]">Basic Information</h3>
-              <Dialog open={showFillDialog} onOpenChange={setShowFillDialog}>
-                <DialogTrigger asChild>
-                  <Button variant="outline" size="sm" className="flex items-center gap-1">
-                    <FileSpreadsheet size={16} />
-                    Fill Data
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-md">
-                  <DialogHeader>
-                    <DialogTitle>Fill Random Data</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4 py-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="itemCount">Number of Items</Label>
-                      <Input
-                        id="itemCount"
-                        type="number"
-                        min="1"
-                        max="30"
-                        value={fillItemsCount}
-                        onChange={(e) => setFillItemsCount(Number.parseInt(e.target.value) || 15)}
-                      />
-                    </div>
-                    <div className="flex justify-end gap-2">
-                      <Button variant="outline" onClick={() => setShowFillDialog(false)}>
-                        Cancel
-                      </Button>
-                      <Button onClick={() => fillRandomData(fillItemsCount)}>Generate Data</Button>
-                    </div>
-                  </div>
-                </DialogContent>
-              </Dialog>
-            </div>
-
+            {/* Basic Info */}
             <div>
               <Label htmlFor="invoiceNumber">Invoice Number</Label>
-              <Input
-                type="text"
-                id="invoiceNumber"
-                name="invoiceNumber"
-                value={formData.invoiceNumber}
-                onChange={handleChange}
-              />
+              <Input type="text" id="invoiceNumber" name="invoiceNumber" value={formData.invoiceNumber} onChange={handleChange} />
             </div>
-
             <div>
               <Label htmlFor="date">Date</Label>
               <Input type="date" id="date" name="date" value={formData.date} onChange={handleChange} />
             </div>
-
             <div>
               <Label htmlFor="dueDate">Due Date</Label>
               <Input type="date" id="dueDate" name="dueDate" value={formData.dueDate} onChange={handleChange} />
             </div>
 
+            {/* Items — at the top after basic info, with scrollable list */}
             <div className="pt-2 border-t border-gray-200">
-              <h3 className="text-md font-medium text-[#1e40af] mb-2">Client Information</h3>
-
-              <div className="space-y-3">
-                <div>
-                  <Label htmlFor="client.name">Client Name</Label>
-                  <Input
-                    type="text"
-                    id="client.name"
-                    name="client.name"
-                    placeholder="John Doe"
-                    value={formData.client.name}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="client.company">Company</Label>
-                  <Input
-                    type="text"
-                    id="client.company"
-                    name="client.company"
-                    placeholder="ABC Corporation"
-                    value={formData.client.company}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="client.address">Address</Label>
-                  <Input
-                    type="text"
-                    id="client.address"
-                    name="client.address"
-                    placeholder="123 Business St, City"
-                    value={formData.client.address}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="client.phone">Phone</Label>
-                  <Input
-                    type="text"
-                    id="client.phone"
-                    name="client.phone"
-                    placeholder="+1 234 567 8900"
-                    value={formData.client.phone}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="client.email">Email</Label>
-                  <Input
-                    type="email"
-                    id="client.email"
-                    name="client.email"
-                    placeholder="client@example.com"
-                    value={formData.client.email}
-                    onChange={handleChange}
-                  />
-                </div>
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="text-md font-medium text-[#1e40af]">Items</h3>
+                <span className="text-xs text-gray-400">{formData.items.length} item(s)</span>
               </div>
-            </div>
 
-            <div className="pt-2 border-t border-gray-200">
-              <h3 className="text-md font-medium text-[#1e40af] mb-2">Items</h3>
+              {/* Catalog quick-add dropdown */}
+              <div className="mb-3">
+                <Label>Quick Add from Catalog</Label>
+                <select
+                  value={catalogValue}
+                  onChange={(e) => {
+                    setCatalogValue(e.target.value)
+                    if (e.target.value !== "") addFromCatalog(e.target.value)
+                  }}
+                  className="w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-2 focus:ring-[#1e40af]"
+                >
+                  <option value="">-- Select a product to add --</option>
+                  {catalogItems.map((item, idx) => (
+                    <option key={idx} value={idx}>
+                      {item.name} — PKR {new Intl.NumberFormat("en-PK").format(item.price)}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-              {formData.items.map((item, index) => (
-                <div key={item.id} className="space-y-3 mb-4 p-3 bg-gray-50 rounded-md">
-                  <div className="flex justify-between items-center">
-                    <h4 className="text-sm font-medium">Item #{index + 1}</h4>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => removeItem(item.id)}
-                      className="h-8 w-8 p-0"
-                    >
-                      <Trash2 size={16} className="text-red-500" />
-                    </Button>
-                  </div>
-
-                  <div>
-                    <Label htmlFor={`item-${item.id}-name`}>Item Name</Label>
-                    <Input
-                      type="text"
-                      id={`item-${item.id}-name`}
-                      value={item.name}
-                      onChange={(e) => handleItemChange(item.id, "name", e.target.value)}
-                      placeholder="Product/Service Name"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor={`item-${item.id}-description`}>Description</Label>
-                    <Textarea
-                      id={`item-${item.id}-description`}
-                      value={item.description}
-                      onChange={(e) => handleItemChange(item.id, "description", e.target.value)}
-                      placeholder="Item description"
-                      rows={2}
-                      className="resize-none"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
+              {/* Scrollable items list */}
+              <div className="max-h-[420px] overflow-y-auto space-y-3 pr-1">
+                {formData.items.map((item, index) => (
+                  <div key={item.id} className="space-y-2 p-3 bg-gray-50 rounded-md border border-gray-100">
+                    <div className="flex justify-between items-center">
+                      <h4 className="text-sm font-medium text-gray-700">Item #{index + 1}</h4>
+                      <Button type="button" variant="ghost" size="sm" onClick={() => removeItem(item.id)} className="h-7 w-7 p-0">
+                        <Trash2 size={14} className="text-red-500" />
+                      </Button>
+                    </div>
                     <div>
-                      <Label htmlFor={`item-${item.id}-quantity`}>Quantity</Label>
+                      <Label htmlFor={`item-${item.id}-name`} className="text-xs">Item Name</Label>
                       <Input
-                        type="number"
-                        id={`item-${item.id}-quantity`}
-                        value={item.quantity}
-                        onChange={(e) => handleItemChange(item.id, "quantity", Number(e.target.value))}
-                        min="1"
+                        type="text"
+                        id={`item-${item.id}-name`}
+                        value={item.name}
+                        onChange={(e) => handleItemChange(item.id, "name", e.target.value)}
+                        placeholder="Product/Service Name"
+                        className="h-8 text-sm"
                       />
                     </div>
-
                     <div>
-                      <Label htmlFor={`item-${item.id}-price`}>Unit Price</Label>
-                      <Input
-                        type="number"
-                        id={`item-${item.id}-price`}
-                        value={item.unitPrice}
-                        onChange={(e) => handleItemChange(item.id, "unitPrice", Number(e.target.value))}
-                        min="0"
-                        step="0.01"
+                      <Label htmlFor={`item-${item.id}-description`} className="text-xs">Description</Label>
+                      <Textarea
+                        id={`item-${item.id}-description`}
+                        value={item.description}
+                        onChange={(e) => handleItemChange(item.id, "description", e.target.value)}
+                        placeholder="Item description"
+                        rows={2}
+                        className="resize-none text-sm"
                       />
                     </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <Label htmlFor={`item-${item.id}-quantity`} className="text-xs">Qty</Label>
+                        <Input
+                          type="number"
+                          id={`item-${item.id}-quantity`}
+                          value={item.quantity}
+                          onChange={(e) => handleItemChange(item.id, "quantity", Number(e.target.value))}
+                          min="1"
+                          className="h-8 text-sm"
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor={`item-${item.id}-price`} className="text-xs">Unit Price</Label>
+                        <Input
+                          type="number"
+                          id={`item-${item.id}-price`}
+                          value={item.unitPrice}
+                          onChange={(e) => handleItemChange(item.id, "unitPrice", Number(e.target.value))}
+                          min="0"
+                          step="0.01"
+                          className="h-8 text-sm"
+                        />
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
 
-              <Button
-                type="button"
-                variant="outline"
-                onClick={addItem}
-                className="w-full mt-2 flex items-center justify-center gap-2"
-              >
+              <Button type="button" variant="outline" onClick={addItem} className="w-full mt-3 flex items-center justify-center gap-2">
                 <Plus size={16} />
-                Add Item
+                Add Item Manually
               </Button>
             </div>
 
+            {/* Client Info */}
             <div className="pt-2 border-t border-gray-200">
-              <div>
-                <Label htmlFor="taxRate">Tax Rate (%)</Label>
-                <Input
-                  type="number"
-                  id="taxRate"
-                  name="taxRate"
-                  value={formData.taxRate}
-                  onChange={handleChange}
-                  min="0"
-                  max="100"
-                  step="0.01"
-                />
+              <h3 className="text-md font-medium text-[#1e40af] mb-2">Client Information</h3>
+              <div className="space-y-3">
+                <div>
+                  <Label htmlFor="client.name">Client Name</Label>
+                  <Input type="text" id="client.name" name="client.name" placeholder="John Doe" value={formData.client.name} onChange={handleChange} />
+                </div>
+                <div>
+                  <Label htmlFor="client.company">Company</Label>
+                  <Input type="text" id="client.company" name="client.company" placeholder="ABC Corporation" value={formData.client.company} onChange={handleChange} />
+                </div>
+                <div>
+                  <Label htmlFor="client.address">Address</Label>
+                  <Input type="text" id="client.address" name="client.address" placeholder="123 Business St, City" value={formData.client.address} onChange={handleChange} />
+                </div>
+                <div>
+                  <Label htmlFor="client.phone">Phone</Label>
+                  <Input type="text" id="client.phone" name="client.phone" placeholder="+92 300 0000000" value={formData.client.phone} onChange={handleChange} />
+                </div>
+                <div>
+                  <Label htmlFor="client.email">Email</Label>
+                  <Input type="email" id="client.email" name="client.email" placeholder="client@example.com" value={formData.client.email} onChange={handleChange} />
+                </div>
               </div>
             </div>
 
+            {/* Tax Rate */}
+            <div className="pt-2 border-t border-gray-200">
+              <Label htmlFor="taxRate">Tax Rate (%)</Label>
+              <Input type="number" id="taxRate" name="taxRate" value={formData.taxRate} onChange={handleChange} min="0" max="100" step="0.01" />
+            </div>
+
+            {/* Bank Details */}
             <div className="pt-2 border-t border-gray-200">
               <h3 className="text-md font-medium text-[#1e40af] mb-2">Payment Details</h3>
-
               <div className="space-y-3">
                 <div>
                   <Label htmlFor="bankDetails.bankName">Bank Name</Label>
-                  <Input
-                    type="text"
-                    id="bankDetails.bankName"
-                    name="bankDetails.bankName"
-                    placeholder="Bank Name"
-                    value={formData.bankDetails.bankName}
-                    onChange={handleChange}
-                  />
+                  <Input type="text" id="bankDetails.bankName" name="bankDetails.bankName" placeholder="Bank Name" value={formData.bankDetails.bankName} onChange={handleChange} />
                 </div>
-
                 <div>
                   <Label htmlFor="bankDetails.accountTitle">Account Title</Label>
-                  <Input
-                    type="text"
-                    id="bankDetails.accountTitle"
-                    name="bankDetails.accountTitle"
-                    placeholder="Account Title"
-                    value={formData.bankDetails.accountTitle}
-                    onChange={handleChange}
-                  />
+                  <Input type="text" id="bankDetails.accountTitle" name="bankDetails.accountTitle" placeholder="Account Title" value={formData.bankDetails.accountTitle} onChange={handleChange} />
                 </div>
-
-                <div>
-                  <Label htmlFor="bankDetails.iban">IBAN</Label>
-                  <Input
-                    type="text"
-                    id="bankDetails.iban"
-                    name="bankDetails.iban"
-                    placeholder="IBAN"
-                    value={formData.bankDetails.iban}
-                    onChange={handleChange}
-                  />
-                </div>
-
                 <div>
                   <Label htmlFor="bankDetails.accountNumber">Account Number</Label>
-                  <Input
-                    type="text"
-                    id="bankDetails.accountNumber"
-                    name="bankDetails.accountNumber"
-                    placeholder="Account Number"
-                    value={formData.bankDetails.accountNumber}
-                    onChange={handleChange}
-                  />
+                  <Input type="text" id="bankDetails.accountNumber" name="bankDetails.accountNumber" placeholder="Account Number" value={formData.bankDetails.accountNumber} onChange={handleChange} />
                 </div>
-
+                <div>
+                  <Label htmlFor="bankDetails.iban">IBAN</Label>
+                  <Input type="text" id="bankDetails.iban" name="bankDetails.iban" placeholder="IBAN" value={formData.bankDetails.iban} onChange={handleChange} />
+                </div>
                 <div>
                   <Label htmlFor="bankDetails.swiftCode">Swift Code</Label>
-                  <Input
-                    type="text"
-                    id="bankDetails.swiftCode"
-                    name="bankDetails.swiftCode"
-                    placeholder="Swift Code"
-                    value={formData.bankDetails.swiftCode}
-                    onChange={handleChange}
-                  />
+                  <Input type="text" id="bankDetails.swiftCode" name="bankDetails.swiftCode" placeholder="Swift Code" value={formData.bankDetails.swiftCode} onChange={handleChange} />
                 </div>
               </div>
             </div>
 
-            <div>
+            {/* Notes */}
+            <div className="pt-2 border-t border-gray-200">
               <Label htmlFor="notes">Notes</Label>
-              <Textarea
-                id="notes"
-                name="notes"
-                value={formData.notes}
-                onChange={handleChange}
-                rows={3}
-                className="resize-none"
-              />
+              <Textarea id="notes" name="notes" value={formData.notes} onChange={handleChange} rows={3} className="resize-none" />
+            </div>
+
+            {/* Company Info (editable) */}
+            <div className="pt-2 border-t border-gray-200">
+              <h3 className="text-md font-medium text-[#1e40af] mb-2">Our Company Info</h3>
+              <div className="space-y-3">
+                <div>
+                  <Label htmlFor="companyInfo.email">Contact Email</Label>
+                  <Input type="email" id="companyInfo.email" name="companyInfo.email" value={formData.companyInfo.email} onChange={handleChange} />
+                </div>
+                <div>
+                  <Label htmlFor="companyInfo.phone">Phone</Label>
+                  <Input type="text" id="companyInfo.phone" name="companyInfo.phone" value={formData.companyInfo.phone} onChange={handleChange} />
+                </div>
+                <div>
+                  <Label htmlFor="companyInfo.address">Address</Label>
+                  <Input type="text" id="companyInfo.address" name="companyInfo.address" value={formData.companyInfo.address} onChange={handleChange} />
+                </div>
+                <div>
+                  <Label htmlFor="companyInfo.website">Website</Label>
+                  <Input type="text" id="companyInfo.website" name="companyInfo.website" value={formData.companyInfo.website} onChange={handleChange} />
+                </div>
+                <div>
+                  <Label htmlFor="companyInfo.description">Business Description</Label>
+                  <Textarea id="companyInfo.description" name="companyInfo.description" value={formData.companyInfo.description} onChange={handleChange} rows={3} className="resize-none text-sm" />
+                </div>
+              </div>
             </div>
           </div>
 
+          {/* Actions */}
           <div className="flex flex-wrap gap-3 mt-6">
             <Button onClick={handleSave} className="flex items-center gap-2">
               <Save size={16} />
@@ -775,258 +574,13 @@ export default function InvoiceEditor() {
                   <DialogTitle>Invoice Preview</DialogTitle>
                 </DialogHeader>
                 <div className="mt-4">
-                  <div ref={previewRef} className="print-optimized p-8 bg-white">
-                    {/* Header with logo and company info */}
-                    <div className="flex justify-between items-start border-b pb-4">
-                      <div className="flex items-center gap-3">
-                        <Image
-                          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Right%20Logo-pcG5xhUOcBvEaMtBemNZplMKUox6rR.png"
-                          alt="Gencore IT Solutions Logo"
-                          width={50}
-                          height={50}
-                          className="object-contain"
-                        />
-                        <div>
-                          <h1 className="text-xl font-bold text-[#1e40af]">Gencore IT Solutions</h1>
-                          <p className="text-[#f97316] text-xs font-medium">Next Generation Core IT Solutions</p>
-                        </div>
-                      </div>
-                      <div className="text-right text-xs text-gray-600">
-                        <p>4th Floor, Saeed Alam Tower,</p>
-                        <p>Liberty Market, Lahore</p>
-                        <p>Phone: +92 332 0000911</p>
-                        <p>Email: nauman@gencoreit.com</p>
-                      </div>
-                    </div>
-
-                    {/* Business Description */}
-                    <div className="mt-3 mb-4 text-xs text-gray-600">
-                      <p>
-                        Providing New and Used IT Equipment including Servers, Laptops, Systems, Firewalls, Routers, and
-                        Switches, along with comprehensive IT Solutions -- paired with smart, scalable, and secure IT
-                        solutions. You name it, we deliver it.
-                      </p>
-                    </div>
-
-                    {/* Invoice Title */}
-                    <div className="my-4 text-center">
-                      <h2 className="text-xl font-bold text-[#1e40af] uppercase">Invoice</h2>
-                    </div>
-
-                    {/* Invoice Details */}
-                    <div className="flex justify-between mb-4 gap-4">
-                      <div className="bg-gray-50 p-3 rounded-md border border-gray-100 flex-1">
-                        <h3 className="font-semibold text-[#1e40af] text-sm mb-1">Bill To:</h3>
-                        <div className="text-xs space-y-0.5">
-                          <p>
-                            <span className="font-medium">Client Name:</span>{" "}
-                            {formData.client.name || "________________"}
-                          </p>
-                          <p>
-                            <span className="font-medium">Company:</span>{" "}
-                            {formData.client.company || "________________"}
-                          </p>
-                          <p>
-                            <span className="font-medium">Address:</span>{" "}
-                            {formData.client.address || "________________"}
-                          </p>
-                          <p>
-                            <span className="font-medium">Phone:</span> {formData.client.phone || "________________"}
-                          </p>
-                          <p>
-                            <span className="font-medium">Email:</span> {formData.client.email || "________________"}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="bg-gray-50 p-3 rounded-md border border-gray-100 w-1/3">
-                        <h3 className="font-semibold text-[#1e40af] text-sm mb-1">Invoice Details:</h3>
-                        <div className="text-xs grid grid-cols-2 gap-1">
-                          <p className="font-medium">Invoice Number:</p>
-                          <p>{formData.invoiceNumber}</p>
-
-                          <p className="font-medium">Date Issued:</p>
-                          <p>
-                            {formData.date
-                              ? new Date(formData.date).toLocaleDateString("en-US", {
-                                  year: "numeric",
-                                  month: "long",
-                                  day: "numeric",
-                                })
-                              : ""}
-                          </p>
-
-                          <p className="font-medium">Due Date:</p>
-                          <p>
-                            {formData.dueDate
-                              ? new Date(formData.dueDate).toLocaleDateString("en-US", {
-                                  year: "numeric",
-                                  month: "long",
-                                  day: "numeric",
-                                })
-                              : ""}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Invoice Items */}
-                    <div className="my-4">
-                      <table className="w-full border-collapse">
-                        <thead>
-                          <tr>
-                            <th className="py-2 px-3 text-left bg-[#1e40af] text-white font-semibold w-12">SR#</th>
-                            <th className="py-2 px-3 text-left bg-[#1e40af] text-white font-semibold w-1/2">
-                              Item Description
-                            </th>
-                            <th className="py-2 px-3 text-center bg-[#1e40af] text-white font-semibold w-1/6">
-                              Quantity
-                            </th>
-                            <th className="py-2 px-3 text-right bg-[#1e40af] text-white font-semibold w-1/6">
-                              Unit Price
-                            </th>
-                            <th className="py-2 px-3 text-right bg-[#1e40af] text-white rounded-tr-md font-semibold w-1/6">
-                              Total
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {formData.items.slice(0, needsPageBreak ? 8 : formData.items.length).map((item, index) => (
-                            <tr key={item.id} className="border-b border-gray-200">
-                              <td className="py-2 px-3 text-center text-gray-700 text-xs">{index + 1}</td>
-                              <td className="py-2 px-3 text-gray-700 text-xs">
-                                <div>
-                                  <p className="font-medium">{item.name || "Item Name"}</p>
-                                  {item.description && <p className="text-xs text-gray-500">{item.description}</p>}
-                                </div>
-                              </td>
-                              <td className="py-2 px-3 text-center text-gray-700 text-xs">{item.quantity}</td>
-                              <td className="py-2 px-3 text-right text-gray-700 text-xs">
-                                {formatCurrency(item.unitPrice)}
-                              </td>
-                              <td className="py-2 px-3 text-right text-gray-700 text-xs">
-                                {formatCurrency(item.quantity * item.unitPrice)}
-                              </td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-
-                    {/* Page break if needed */}
-                    {needsPageBreak && <div className="page-break"></div>}
-
-                    {/* Remaining items if page break */}
-                    {needsPageBreak && (
-                      <div className="my-4">
-                        <table className="w-full border-collapse">
-                          <thead>
-                            <tr>
-                              <th className="py-2 px-3 text-left bg-[#1e40af] text-white font-semibold w-12">SR#</th>
-                              <th className="py-2 px-3 text-left bg-[#1e40af] text-white font-semibold w-1/2">
-                                Item Description
-                              </th>
-                              <th className="py-2 px-3 text-center bg-[#1e40af] text-white font-semibold w-1/6">
-                                Quantity
-                              </th>
-                              <th className="py-2 px-3 text-right bg-[#1e40af] text-white font-semibold w-1/6">
-                                Unit Price
-                              </th>
-                              <th className="py-2 px-3 text-right bg-[#1e40af] text-white rounded-tr-md font-semibold w-1/6">
-                                Total
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {formData.items.slice(8).map((item, index) => (
-                              <tr key={item.id} className="border-b border-gray-200">
-                                <td className="py-2 px-3 text-center text-gray-700 text-xs">{index + 9}</td>
-                                <td className="py-2 px-3 text-gray-700 text-xs">
-                                  <div>
-                                    <p className="font-medium">{item.name || "Item Name"}</p>
-                                    {item.description && <p className="text-xs text-gray-500">{item.description}</p>}
-                                  </div>
-                                </td>
-                                <td className="py-2 px-3 text-center text-gray-700 text-xs">{item.quantity}</td>
-                                <td className="py-2 px-3 text-right text-gray-700 text-xs">
-                                  {formatCurrency(item.unitPrice)}
-                                </td>
-                                <td className="py-2 px-3 text-right text-gray-700 text-xs">
-                                  {formatCurrency(item.quantity * item.unitPrice)}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    )}
-
-                    {/* Totals */}
-                    <div className="flex justify-end mb-4">
-                      <div className="w-1/3 bg-gray-50 p-3 rounded-md border border-gray-100">
-                        <div className="flex justify-between py-1 border-b border-gray-200 text-xs">
-                          <span className="font-medium text-gray-700">Subtotal:</span>
-                          <span className="text-gray-700">{formatCurrency(calculateSubtotal())}</span>
-                        </div>
-                        <div className="flex justify-between py-1 border-b border-gray-200 text-xs">
-                          <span className="font-medium text-gray-700">Tax ({formData.taxRate}%):</span>
-                          <span className="text-gray-700">{formatCurrency(calculateTax())}</span>
-                        </div>
-                        <div className="flex justify-between py-1 font-bold text-xs">
-                          <span className="text-[#1e40af]">Grand Total:</span>
-                          <span className="text-[#1e40af]">{formatCurrency(calculateTotal())}</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Payment Instructions */}
-                    <div className="mb-4">
-                      <h3 className="font-semibold text-[#1e40af] text-sm mb-1">Payment Instructions</h3>
-                      <div className="text-xs grid grid-cols-2 gap-2">
-                        <div>
-                          <span className="font-medium">Bank Name:</span>{" "}
-                          {formData.bankDetails.bankName || "________________"}
-                        </div>
-                        <div>
-                          <span className="font-medium">Account Title:</span>{" "}
-                          {formData.bankDetails.accountTitle || "________________"}
-                        </div>
-                        <div>
-                          <span className="font-medium">Account Number:</span>{" "}
-                          {formData.bankDetails.accountNumber || "________________"}
-                        </div>
-                        <div>
-                          <span className="font-medium">IBAN:</span> {formData.bankDetails.iban || "________________"}
-                        </div>
-                        <div>
-                          <span className="font-medium">Swift Code:</span>{" "}
-                          {formData.bankDetails.swiftCode || "________________"}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Notes */}
-                    <div className="mb-4">
-                      <h3 className="font-semibold text-[#1e40af] text-sm mb-1">Notes</h3>
-                      <p className="text-xs text-gray-600">{formData.notes}</p>
-                    </div>
-
-                    {/* Footer */}
-                    <div className="mt-8 pt-2 border-t border-gray-200 text-center">
-                      <p className="text-xs text-[#1e40af] font-medium">Next Generation Core IT Solutions</p>
-                      <p className="text-xs text-gray-500 mt-0.5">
-                        +92 332 0000911 | nauman@gencoreit.com | www.gencoreit.com
-                      </p>
-                    </div>
+                  <div ref={previewRef}>
+                    <PreviewContent forPDF={true} />
                   </div>
                 </div>
                 <div className="flex justify-end mt-4 gap-2">
-                  <Button variant="outline" onClick={() => setPreviewOpen(false)}>
-                    Close
-                  </Button>
-                  <Button
-                    onClick={handleDownloadPDF}
-                    className="flex items-center gap-2 bg-[#1e40af] hover:bg-[#1e3a8a]"
-                  >
+                  <Button variant="outline" onClick={() => setPreviewOpen(false)}>Close</Button>
+                  <Button onClick={handleDownloadPDF} className="flex items-center gap-2 bg-[#1e40af] hover:bg-[#1e3a8a]">
                     <Download size={16} />
                     Download PDF
                   </Button>
@@ -1045,198 +599,13 @@ export default function InvoiceEditor() {
         </div>
       </div>
 
+      {/* Right panel: Live preview */}
       <div className="lg:col-span-2">
         <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
           <h2 className="text-lg font-semibold text-[#1e40af] mb-4">Preview</h2>
-
           <div className="border border-gray-200 rounded-lg overflow-hidden bg-white">
-            <div ref={printRef} className="w-full p-8">
-              {/* Header with logo and company info */}
-              <div className="flex justify-between items-start border-b pb-4">
-                <div className="flex items-center gap-3">
-                  <Image
-                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Right%20Logo-pcG5xhUOcBvEaMtBemNZplMKUox6rR.png"
-                    alt="Gencore IT Solutions Logo"
-                    width={50}
-                    height={50}
-                    className="object-contain"
-                  />
-                  <div>
-                    <h1 className="text-xl font-bold text-[#1e40af]">Gencore IT Solutions</h1>
-                    <p className="text-[#f97316] text-xs font-medium">Next Generation Core IT Solutions</p>
-                  </div>
-                </div>
-                <div className="text-right text-xs text-gray-600">
-                  <p>4th Floor, Saeed Alam Tower,</p>
-                  <p>Liberty Market, Lahore</p>
-                  <p>Phone: +92 332 0000911</p>
-                  <p>Email: nauman@gencoreit.com</p>
-                </div>
-              </div>
-
-              {/* Business Description */}
-              <div className="mt-3 mb-4 text-xs text-gray-600">
-                <p>
-                  Providing New and Used IT Equipment including Servers, Laptops, Systems, Firewalls, Routers, and
-                  Switches, along with comprehensive IT Solutions -- paired with smart, scalable, and secure IT
-                  solutions. You name it, we deliver it.
-                </p>
-              </div>
-
-              {/* Invoice Title */}
-              <div className="my-4 text-center">
-                <h2 className="text-xl font-bold text-[#1e40af] uppercase">Invoice</h2>
-              </div>
-
-              {/* Invoice Details */}
-              <div className="flex justify-between mb-4 gap-4">
-                <div className="bg-gray-50 p-3 rounded-md border border-gray-100 flex-1">
-                  <h3 className="font-semibold text-[#1e40af] text-sm mb-1">Bill To:</h3>
-                  <div className="text-xs space-y-0.5">
-                    <p>
-                      <span className="font-medium">Client Name:</span> {formData.client.name || "________________"}
-                    </p>
-                    <p>
-                      <span className="font-medium">Company:</span> {formData.client.company || "________________"}
-                    </p>
-                    <p>
-                      <span className="font-medium">Address:</span> {formData.client.address || "________________"}
-                    </p>
-                    <p>
-                      <span className="font-medium">Phone:</span> {formData.client.phone || "________________"}
-                    </p>
-                    <p>
-                      <span className="font-medium">Email:</span> {formData.client.email || "________________"}
-                    </p>
-                  </div>
-                </div>
-                <div className="bg-gray-50 p-3 rounded-md border border-gray-100 w-1/3">
-                  <h3 className="font-semibold text-[#1e40af] text-sm mb-1">Invoice Details:</h3>
-                  <div className="text-xs grid grid-cols-2 gap-1">
-                    <p className="font-medium">Invoice Number:</p>
-                    <p>{formData.invoiceNumber}</p>
-
-                    <p className="font-medium">Date Issued:</p>
-                    <p>
-                      {formData.date
-                        ? new Date(formData.date).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })
-                        : ""}
-                    </p>
-
-                    <p className="font-medium">Due Date:</p>
-                    <p>
-                      {formData.dueDate
-                        ? new Date(formData.dueDate).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })
-                        : ""}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Invoice Items */}
-              <div className="my-4">
-                <table className="w-full border-collapse">
-                  <thead>
-                    <tr>
-                      <th className="py-2 px-3 text-left bg-[#1e40af] text-white rounded-tl-md font-semibold w-12">
-                        SR#
-                      </th>
-                      <th className="py-2 px-3 text-left bg-[#1e40af] text-white font-semibold w-1/2">
-                        Item Description
-                      </th>
-                      <th className="py-2 px-3 text-center bg-[#1e40af] text-white font-semibold w-1/6">Quantity</th>
-                      <th className="py-2 px-3 text-right bg-[#1e40af] text-white font-semibold w-1/6">Unit Price</th>
-                      <th className="py-2 px-3 text-right bg-[#1e40af] text-white rounded-tr-md font-semibold w-1/6">
-                        Total
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {formData.items.map((item, index) => (
-                      <tr key={item.id} className="border-b border-gray-200">
-                        <td className="py-2 px-3 text-center text-gray-700 text-xs">{index + 1}</td>
-                        <td className="py-2 px-3 text-gray-700 text-xs">
-                          <div>
-                            <p className="font-medium">{item.name || "Item Name"}</p>
-                            {item.description && <p className="text-xs text-gray-500">{item.description}</p>}
-                          </div>
-                        </td>
-                        <td className="py-2 px-3 text-center text-gray-700 text-xs">{item.quantity}</td>
-                        <td className="py-2 px-3 text-right text-gray-700 text-xs">{formatCurrency(item.unitPrice)}</td>
-                        <td className="py-2 px-3 text-right text-gray-700 text-xs">
-                          {formatCurrency(item.quantity * item.unitPrice)}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Totals */}
-              <div className="flex justify-end mb-4">
-                <div className="w-1/3 bg-gray-50 p-3 rounded-md border border-gray-100">
-                  <div className="flex justify-between py-1 border-b border-gray-200 text-xs">
-                    <span className="font-medium text-gray-700">Subtotal:</span>
-                    <span className="text-gray-700">{formatCurrency(calculateSubtotal())}</span>
-                  </div>
-                  <div className="flex justify-between py-1 border-b border-gray-200 text-xs">
-                    <span className="font-medium text-gray-700">Tax ({formData.taxRate}%):</span>
-                    <span className="text-gray-700">{formatCurrency(calculateTax())}</span>
-                  </div>
-                  <div className="flex justify-between py-1 font-bold text-xs">
-                    <span className="text-[#1e40af]">Grand Total:</span>
-                    <span className="text-[#1e40af]">{formatCurrency(calculateTotal())}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Payment Instructions */}
-              <div className="mb-4">
-                <h3 className="font-semibold text-[#1e40af] text-sm mb-1">Payment Instructions</h3>
-                <div className="text-xs grid grid-cols-2 gap-2">
-                  <div>
-                    <span className="font-medium">Bank Name:</span>{" "}
-                    {formData.bankDetails.bankName || "________________"}
-                  </div>
-                  <div>
-                    <span className="font-medium">Account Title:</span>{" "}
-                    {formData.bankDetails.accountTitle || "________________"}
-                  </div>
-                  <div>
-                    <span className="font-medium">Account Number:</span>{" "}
-                    {formData.bankDetails.accountNumber || "________________"}
-                  </div>
-                  <div>
-                    <span className="font-medium">IBAN:</span> {formData.bankDetails.iban || "________________"}
-                  </div>
-                  <div>
-                    <span className="font-medium">Swift Code:</span>{" "}
-                    {formData.bankDetails.swiftCode || "________________"}
-                  </div>
-                </div>
-              </div>
-
-              {/* Notes */}
-              <div className="mb-4">
-                <h3 className="font-semibold text-[#1e40af] text-sm mb-1">Notes</h3>
-                <p className="text-xs text-gray-600">{formData.notes}</p>
-              </div>
-
-              {/* Footer */}
-              <div className="mt-8 pt-2 border-t border-gray-200 text-center">
-                <p className="text-xs text-[#1e40af] font-medium">Next Generation Core IT Solutions</p>
-                <p className="text-xs text-gray-500 mt-0.5">
-                  +92 332 0000911 | nauman@gencoreit.com | www.gencoreit.com
-                </p>
-              </div>
+            <div ref={printRef}>
+              <PreviewContent />
             </div>
           </div>
         </div>

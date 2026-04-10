@@ -1,0 +1,160 @@
+export interface CatalogItem {
+  name: string
+  description: string
+  price: number
+}
+
+export const catalogItems: CatalogItem[] = [
+  // Peripherals & Accessories
+  { name: "Mouse", description: "Wired USB optical mouse", price: 500 },
+  { name: "Wireless Mouse", description: "2.4GHz wireless optical mouse with USB receiver", price: 1200 },
+  { name: "Keyboard", description: "Standard USB keyboard", price: 800 },
+  { name: "Wireless Keyboard", description: "2.4GHz wireless keyboard with USB receiver", price: 1800 },
+  { name: "Keyboard & Mouse Combo", description: "Wireless keyboard and mouse combo set", price: 2500 },
+  { name: "USB Hub (4-Port)", description: "USB 3.0 4-port hub with individual power switches", price: 900 },
+  { name: "USB Flash Drive 32GB", description: "USB 3.0 flash drive, 32GB", price: 800 },
+  { name: "USB Flash Drive 64GB", description: "USB 3.0 flash drive, 64GB", price: 1200 },
+  { name: "USB Flash Drive 128GB", description: "USB 3.0 flash drive, 128GB", price: 2000 },
+  { name: "Power Cable", description: "IEC C13 power cable, 1.5m", price: 300 },
+  { name: "Extension Board (6-Socket)", description: "6-socket surge-protected power extension board, 3m cord", price: 1500 },
+  { name: "HDMI Cable (2m)", description: "High-speed HDMI 2.0 cable, 2 meters", price: 500 },
+  { name: "HDMI Cable (5m)", description: "High-speed HDMI 2.0 cable, 5 meters", price: 900 },
+  { name: "DisplayPort Cable (2m)", description: "DisplayPort 1.4 cable, 2 meters", price: 700 },
+  { name: "VGA Cable (2m)", description: "VGA monitor cable, 2 meters", price: 400 },
+  { name: "USB-C to HDMI Adapter", description: "USB-C to HDMI 4K adapter dongle", price: 1200 },
+  { name: "USB-C to USB-A Adapter", description: "USB Type-C to USB-A 3.0 adapter", price: 600 },
+  { name: "Webcam (1080p)", description: "Full HD 1080p USB webcam with built-in microphone", price: 4500 },
+  { name: "Headset (USB)", description: "USB headset with microphone, noise-cancelling", price: 3000 },
+  { name: "Headset (3.5mm)", description: "3.5mm stereo headset with microphone", price: 1500 },
+  { name: "Speakers (Desktop)", description: "2.0 stereo USB-powered desktop speakers", price: 2500 },
+  { name: "Mouse Pad", description: "Non-slip rubber base mouse pad, large", price: 400 },
+  { name: "Laptop Stand", description: "Adjustable aluminium laptop stand, foldable", price: 3000 },
+  { name: "Monitor Stand", description: "Height-adjustable monitor riser stand", price: 2000 },
+  { name: "Cable Management Kit", description: "Cable clips, ties, and sleeves management kit", price: 800 },
+
+  // Displays & Monitors
+  { name: "Monitor 21.5\" FHD", description: "21.5\" Full HD LED monitor, 60Hz, VGA+HDMI", price: 18000 },
+  { name: "Monitor 24\" FHD", description: "24\" Full HD IPS LED monitor, 75Hz, HDMI+DP", price: 26000 },
+  { name: "Monitor 27\" FHD", description: "27\" Full HD IPS LED monitor, 75Hz, HDMI+DP", price: 34000 },
+  { name: "Monitor 27\" QHD", description: "27\" QHD (2560×1440) IPS monitor, 144Hz", price: 55000 },
+  { name: "Dual Monitor Arm", description: "Dual monitor desk mount arm, fits up to 27\"", price: 8000 },
+
+  // Computers & Laptops
+  { name: "Laptop (Core i3)", description: "Business laptop, Intel Core i3, 8GB RAM, 256GB SSD, Windows 11", price: 45000 },
+  { name: "Laptop (Core i5)", description: "Business laptop, Intel Core i5, 8GB RAM, 256GB SSD, Windows 11", price: 65000 },
+  { name: "Laptop (Core i7)", description: "Business laptop, Intel Core i7, 16GB RAM, 512GB SSD, Windows 11 Pro", price: 95000 },
+  { name: "HP EliteBook 840 G8", description: "Intel Core i7-1165G7, 16GB RAM, 512GB SSD, 14\" FHD, Windows 11 Pro", price: 120000 },
+  { name: "Dell Latitude 5520", description: "Intel Core i5-1145G7, 8GB RAM, 256GB SSD, 15.6\" FHD", price: 85000 },
+  { name: "Lenovo ThinkPad E14", description: "AMD Ryzen 5, 8GB RAM, 512GB SSD, 14\" FHD, Windows 11", price: 75000 },
+  { name: "Desktop PC (Core i3)", description: "Desktop computer, Intel Core i3, 8GB RAM, 500GB HDD, Windows 11", price: 35000 },
+  { name: "Desktop PC (Core i5)", description: "Desktop computer, Intel Core i5, 8GB RAM, 1TB HDD, Windows 11", price: 45000 },
+  { name: "Desktop PC (Core i7)", description: "Desktop computer, Intel Core i7, 16GB RAM, 512GB SSD+1TB HDD", price: 65000 },
+  { name: "All-in-One PC (Core i5)", description: "21.5\" AIO, Intel Core i5, 8GB RAM, 256GB SSD, Windows 11", price: 55000 },
+
+  // Storage
+  { name: "Hard Disk 1TB (Desktop)", description: "3.5\" SATA HDD, 1TB, 7200 RPM", price: 7000 },
+  { name: "Hard Disk 2TB (Desktop)", description: "3.5\" SATA HDD, 2TB, 7200 RPM", price: 10000 },
+  { name: "Hard Disk 1TB (Laptop)", description: "2.5\" SATA HDD, 1TB, 5400 RPM", price: 6500 },
+  { name: "SSD 256GB (SATA)", description: "2.5\" SATA SSD, 256GB, read 550MB/s", price: 5500 },
+  { name: "SSD 512GB (SATA)", description: "2.5\" SATA SSD, 512GB, read 550MB/s", price: 9000 },
+  { name: "SSD 1TB (SATA)", description: "2.5\" SATA SSD, 1TB, read 550MB/s", price: 15000 },
+  { name: "SSD 256GB (NVMe M.2)", description: "M.2 NVMe SSD, 256GB, read 3200MB/s", price: 7000 },
+  { name: "SSD 512GB (NVMe M.2)", description: "M.2 NVMe SSD, 512GB, read 3500MB/s", price: 11000 },
+  { name: "SSD 1TB (NVMe M.2)", description: "M.2 NVMe SSD, 1TB, read 3500MB/s", price: 18000 },
+  { name: "External HDD 1TB", description: "Portable external HDD, 1TB, USB 3.0, slim design", price: 8000 },
+  { name: "External HDD 2TB", description: "Portable external HDD, 2TB, USB 3.0", price: 13000 },
+  { name: "NAS Storage Device", description: "2-bay NAS for SMB, RAID 1 support, 2x 4TB", price: 55000 },
+
+  // Memory (RAM)
+  { name: "RAM 4GB DDR4", description: "4GB DDR4 2666MHz desktop memory module", price: 2000 },
+  { name: "RAM 8GB DDR4", description: "8GB DDR4 2666MHz desktop memory module", price: 3500 },
+  { name: "RAM 16GB DDR4", description: "16GB DDR4 3200MHz desktop memory module", price: 6500 },
+  { name: "RAM 8GB DDR4 (Laptop)", description: "8GB DDR4 3200MHz SO-DIMM laptop memory", price: 4000 },
+  { name: "RAM 16GB DDR4 (Laptop)", description: "16GB DDR4 3200MHz SO-DIMM laptop memory", price: 7500 },
+
+  // Printers & Scanners
+  { name: "Printer (Laser Mono)", description: "Monochrome laser printer, 30ppm, USB+Network", price: 22000 },
+  { name: "Printer (Laser Color)", description: "Color laser printer, 20ppm color, USB+Network", price: 55000 },
+  { name: "Printer (Inkjet)", description: "Inkjet photo printer, USB, borderless 4x6", price: 12000 },
+  { name: "All-in-One Printer", description: "Laser AIO: print, scan, copy, fax, network", price: 35000 },
+  { name: "Toner Cartridge (Black)", description: "Compatible monochrome laser toner cartridge", price: 3000 },
+  { name: "Toner Cartridge (Color Set)", description: "Compatible CMYK color toner cartridge set", price: 9000 },
+  { name: "Ink Cartridge Set", description: "OEM inkjet ink cartridge set (BK+C+M+Y)", price: 2500 },
+  { name: "Scanner (Flatbed A4)", description: "A4 flatbed scanner, 1200dpi, USB", price: 8000 },
+  { name: "Scanner (Document ADF)", description: "ADF document scanner, 50ppm duplex, USB+Network", price: 35000 },
+
+  // Networking
+  { name: "WiFi Router (AC1200)", description: "Dual-band wireless router, AC1200, 4x LAN", price: 4500 },
+  { name: "WiFi Router (AC2100)", description: "Dual-band wireless router, AC2100, MU-MIMO", price: 8000 },
+  { name: "WiFi Router (AX3000)", description: "Wi-Fi 6 router, AX3000, dual-band, 4x LAN", price: 15000 },
+  { name: "Wireless Access Point", description: "Indoor dual-band access point, PoE powered, AC1750", price: 12000 },
+  { name: "Wireless Access Point (Wi-Fi 6)", description: "Wi-Fi 6 indoor access point, AX3000, PoE+", price: 22000 },
+  { name: "Network Switch (5-port)", description: "Fast Ethernet 5-port unmanaged switch", price: 1500 },
+  { name: "Network Switch (8-port)", description: "Fast Ethernet 8-port unmanaged switch", price: 3000 },
+  { name: "Network Switch (16-port)", description: "Gigabit 16-port unmanaged switch", price: 7000 },
+  { name: "Network Switch (24-port)", description: "Gigabit 24-port managed switch", price: 18000 },
+  { name: "Cisco Catalyst 9300 Switch", description: "24-port PoE+, Network Advantage, 1100W AC power supply", price: 320000 },
+  { name: "Patch Cable Cat6 (1m)", description: "CAT6 UTP patch cable, 1 meter", price: 150 },
+  { name: "Patch Cable Cat6 (3m)", description: "CAT6 UTP patch cable, 3 meters", price: 200 },
+  { name: "Patch Cable Cat6 (5m)", description: "CAT6 UTP patch cable, 5 meters", price: 350 },
+  { name: "CAT6 Cable Roll (305m)", description: "CAT6 UTP solid cable roll, 305 meters", price: 12000 },
+  { name: "Patch Panel (24-port)", description: "24-port CAT6 patch panel with cable management", price: 4500 },
+  { name: "RJ45 Connectors (Box/100)", description: "CAT6 RJ45 connectors, box of 100", price: 600 },
+  { name: "Keystone Jack (CAT6)", description: "CAT6 keystone jack for wall plates, pack of 10", price: 800 },
+  { name: "IP Phone", description: "VoIP desk phone with 2-line SIP support", price: 8000 },
+  { name: "Media Converter (Fiber-Ethernet)", description: "Single-mode fiber to Gigabit Ethernet media converter", price: 3500 },
+
+  // Security & Surveillance
+  { name: "CCTV Camera (Bullet)", description: "2MP IP bullet camera, IR 30m, PoE, IP67", price: 5000 },
+  { name: "CCTV Camera (Dome)", description: "2MP IP dome camera, IR 20m, PoE, IP67", price: 5500 },
+  { name: "CCTV Camera (PTZ)", description: "2MP PTZ IP camera, 20x optical zoom, IR 100m", price: 35000 },
+  { name: "NVR (8-Channel)", description: "8-channel network video recorder, supports 4K, 2x HDD bay", price: 18000 },
+  { name: "NVR (16-Channel)", description: "16-channel network video recorder, supports 4K, 2x HDD bay", price: 28000 },
+  { name: "DVR (8-Channel)", description: "8-channel HD DVR, 5-in-1, 1x HDD bay, mobile app", price: 10000 },
+  { name: "CCTV HDD 2TB (Surveillance)", description: "2TB surveillance-grade SATA HDD for DVR/NVR", price: 12000 },
+  { name: "CCTV Complete Kit (4 Cam)", description: "4x 2MP dome cameras + 4-ch NVR + 1TB HDD + cables", price: 35000 },
+  { name: "Biometric Attendance Device", description: "Fingerprint+RFID attendance terminal with TCP/IP", price: 15000 },
+  { name: "Access Control Panel", description: "Single-door access controller with RFID reader", price: 12000 },
+  { name: "Electric Door Lock", description: "Electromagnetic door lock, 280kg holding force", price: 6000 },
+
+  // Power & UPS
+  { name: "UPS 650VA", description: "650VA/360W line-interactive UPS, 2x battery outlets", price: 6000 },
+  { name: "UPS 1000VA", description: "1000VA/600W line-interactive UPS, 6 outlets", price: 12000 },
+  { name: "UPS 1500VA", description: "1500VA/900W line-interactive UPS, pure sine wave, LCD", price: 22000 },
+  { name: "UPS 2000VA", description: "2000VA/1200W online UPS, pure sine wave, LCD display", price: 35000 },
+  { name: "UPS Battery (12V 9Ah)", description: "Sealed lead-acid replacement battery, 12V 9Ah", price: 3500 },
+  { name: "Generator (5kVA)", description: "5kVA petrol generator, electric start, AVR", price: 85000 },
+
+  // Servers & Enterprise
+  { name: "Server (Tower, Xeon)", description: "Tower server, Intel Xeon, 32GB RAM, 2TB storage", price: 180000 },
+  { name: "Dell PowerEdge R740 Server", description: "Refurbished, 2x Intel Xeon Gold 6248R, 128GB RAM, 8x 1.2TB SAS", price: 450000 },
+  { name: "HP ProLiant DL380 Gen10", description: "2x Intel Xeon Silver 4210R, 64GB RAM, 4x 1.2TB SAS, 2x 800W PSU", price: 620000 },
+  { name: "Firewall Appliance", description: "Next-generation firewall with 1-year license", price: 85000 },
+  { name: "Fortinet FortiGate 100F", description: "Next-Gen Firewall with 1-Year FortiGuard UTM Protection", price: 580000 },
+  { name: "KVM Switch (4-port)", description: "4-port KVM switch for server management", price: 6000 },
+  { name: "Rack Cabinet (12U)", description: "Wall-mount 12U network rack enclosure", price: 18000 },
+  { name: "Rack Cabinet (22U)", description: "Floor-standing 22U server rack, lockable, with fans", price: 35000 },
+  { name: "Rack Cabinet (42U)", description: "Floor-standing 42U server rack, glass door, PDU ready", price: 65000 },
+  { name: "PDU (Rack Power Strip)", description: "8-outlet 19\" rack-mount PDU, 16A", price: 8000 },
+
+  // Software & Licenses
+  { name: "Windows 11 Home (License)", description: "Microsoft Windows 11 Home OEM license key", price: 12000 },
+  { name: "Windows 11 Pro (License)", description: "Microsoft Windows 11 Pro OEM license key", price: 18000 },
+  { name: "Microsoft Office 2021 Home", description: "MS Office 2021 Home & Student, lifetime license", price: 15000 },
+  { name: "Microsoft Office 2021 Pro", description: "MS Office 2021 Professional Plus, lifetime license", price: 25000 },
+  { name: "Microsoft 365 Business Basic", description: "Microsoft 365 Business Basic, per user per month", price: 1200 },
+  { name: "Antivirus (1 PC, 1 Year)", description: "Endpoint antivirus license, 1 device, 1-year subscription", price: 2500 },
+  { name: "Antivirus (10 PC, 1 Year)", description: "Endpoint antivirus license, 10 devices, 1-year subscription", price: 18000 },
+
+  // Services
+  { name: "Network Installation", description: "Professional network cabling and configuration service", price: 15000 },
+  { name: "Structured Cabling (per point)", description: "CAT6 structured cabling per point, including materials", price: 1500 },
+  { name: "IT Support (Hourly)", description: "On-site or remote IT support, per hour", price: 2000 },
+  { name: "IT Support (Day Rate)", description: "On-site IT support, full day (8 hours)", price: 12000 },
+  { name: "PC/Laptop Setup & Configuration", description: "OS installation, driver setup, software configuration", price: 3000 },
+  { name: "Data Recovery Service", description: "Professional data recovery from failed HDD/SSD", price: 8000 },
+  { name: "Server Setup & Configuration", description: "Physical rack, OS, and role configuration for one server", price: 25000 },
+  { name: "CCTV Installation (per camera)", description: "Camera mounting, cable routing, and NVR connection per camera", price: 2000 },
+  { name: "Annual Maintenance Contract", description: "Comprehensive IT support and maintenance, per year", price: 120000 },
+  { name: "Cloud Backup Setup", description: "Cloud backup solution setup and first-year subscription", price: 15000 },
+]

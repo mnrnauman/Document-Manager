@@ -32,10 +32,8 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
     // Simulate a slight delay for authentication
     setTimeout(() => {
       if (username === "mnrnauman" && password === "precision9911") {
-        // Store authentication in session storage
-        sessionStorage.setItem("gencoreAuth", "true")
+        document.cookie = "gencoreAuth=true; path=/; SameSite=Lax"
         onLogin(true)
-        // Update title after successful login
         document.title = "Document Generator | Gencore IT Solutions"
       } else {
         setError("Invalid username or password. Please try again.")

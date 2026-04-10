@@ -17,6 +17,14 @@ export default function LetterheadEditor() {
 
   const [formData, setFormData] = useState({
     date: new Date().toISOString().split("T")[0],
+    companyInfo: {
+      address: "4th Floor, Saeed Alam Tower, Liberty Market, Lahore",
+      phone: "+92 332 0000911",
+      email: "nauman@gencoreit.com",
+      website: "www.Gencoreit.com",
+      description:
+        "Providing New and Used IT Equipment including Servers, Laptops, Systems, Firewalls, Routers, and Switches, along with comprehensive IT Solutions.",
+    },
     recipient: {
       name: "",
       company: "",
@@ -51,15 +59,19 @@ export default function LetterheadEditor() {
   const handlePrint = () => {
     if (printRef.current) {
       const printContent = printRef.current.innerHTML
-      const originalContent = document.body.innerHTML
 
-      // Create a print-friendly version with improved styling
+      // Create a print-friendly version with all styles from current document
       const printWindow = window.open("", "_blank")
       if (printWindow) {
+        const styleSheets = Array.from(document.querySelectorAll("style, link[rel='stylesheet']"))
+          .map((el) => el.outerHTML)
+          .join("\n")
         printWindow.document.write(`
           <html>
             <head>
+              <meta charset="utf-8">
               <title>Letterhead_${new Date().toISOString().split("T")[0]}</title>
+              ${styleSheets}
               <style>
                 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
                 
@@ -142,15 +154,15 @@ export default function LetterheadEditor() {
                 }
               </style>
             </head>
-            <body>
-              <div class="print-container">
+            <body style="background:white;margin:0;">
+              <div class="print-container" style="padding:20mm;max-width:210mm;margin:0 auto;background:white;">
                 ${printContent}
               </div>
               <script>
                 setTimeout(() => {
                   window.print();
                   window.close();
-                }, 500);
+                }, 1200);
               </script>
             </body>
           </html>
@@ -172,7 +184,7 @@ export default function LetterheadEditor() {
   const handleLoad = () => {
     const savedData = localStorage.getItem("letterhead_draft")
     if (savedData) {
-      setFormData(JSON.parse(savedData))
+      try { setFormData(JSON.parse(savedData)) } catch { localStorage.removeItem("letterhead_draft"); return }
       toast({
         title: "Draft loaded",
         description: "Your saved letterhead draft has been loaded",
@@ -270,6 +282,64 @@ export default function LetterheadEditor() {
                 onChange={handleChange}
               />
             </div>
+
+            {/* Company Info (editable) */}
+            <div className="pt-4 border-t border-gray-200">
+              <h3 className="text-md font-medium text-[#1e40af] mb-3">Our Company Info</h3>
+              <div className="space-y-3">
+                <div>
+                  <Label htmlFor="companyInfo.email">Contact Email</Label>
+                  <Input
+                    type="email"
+                    id="companyInfo.email"
+                    name="companyInfo.email"
+                    value={formData.companyInfo.email}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="companyInfo.phone">Phone</Label>
+                  <Input
+                    type="text"
+                    id="companyInfo.phone"
+                    name="companyInfo.phone"
+                    value={formData.companyInfo.phone}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="companyInfo.address">Address</Label>
+                  <Input
+                    type="text"
+                    id="companyInfo.address"
+                    name="companyInfo.address"
+                    value={formData.companyInfo.address}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="companyInfo.website">Website</Label>
+                  <Input
+                    type="text"
+                    id="companyInfo.website"
+                    name="companyInfo.website"
+                    value={formData.companyInfo.website}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="companyInfo.description">Business Description</Label>
+                  <Textarea
+                    id="companyInfo.description"
+                    name="companyInfo.description"
+                    value={formData.companyInfo.description}
+                    onChange={handleChange}
+                    rows={3}
+                    className="resize-none text-sm"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="flex flex-wrap gap-3 mt-6">
@@ -322,21 +392,17 @@ export default function LetterheadEditor() {
                     </div>
                   </div>
                   <div className="text-right mt-4 md:mt-0 text-sm text-gray-600">
-                    <p>4th Floor, Saeed Alam Tower,</p>
-                    <p>Liberty Market, Lahore</p>
-                    <p>Phone: +92 332 0000911</p>
-                    <p>Email: nauman@gencoreit.com</p>
-                    <p>www.Gencoreit.com</p>
+                    <p>{formData.companyInfo.address}</p>
+                    <p>Phone: {formData.companyInfo.phone}</p>
+                    <p>Email: {formData.companyInfo.email}</p>
+                    <p>{formData.companyInfo.website}</p>
                   </div>
                 </div>
               </div>
 
               {/* Business Description */}
               <div className="mt-4 mb-6 text-sm text-gray-600 italic border-l-2 border-[#1e40af] pl-3 bg-gray-50 py-2 rounded-r-md">
-                <p>
-                  Providing New and Used IT Equipment including Servers, Laptops, Systems, Firewalls, Routers, and
-                  Switches, along with comprehensive IT Solutions.
-                </p>
+                <p>{formData.companyInfo.description}</p>
               </div>
 
               {/* Date and Recipient */}
@@ -391,7 +457,7 @@ export default function LetterheadEditor() {
                   <div className="border-t border-gray-200 pt-4 pb-6 text-center">
                     <p className="text-sm text-[#1e40af] font-medium">Next Generation Core IT Solutions</p>
                     <p className="text-xs text-gray-500 mt-1">
-                      www.Gencoreit.com | +92 332 0000911 | nauman@gencoreit.com
+                      {formData.companyInfo.website} | {formData.companyInfo.phone} | {formData.companyInfo.email}
                     </p>
                   </div>
                 </div>

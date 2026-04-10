@@ -2,61 +2,57 @@ import html2canvas from "html2canvas"
 import jsPDF from "jspdf"
 
 export async function generatePDF(element: HTMLElement, filename: string): Promise<void> {
-  // Wait for any images to load
   await new Promise((resolve) => setTimeout(resolve, 500))
 
   try {
-    // Remove any Vercel SSO URLs that might be in the document
     const links = element.querySelectorAll('a[href*="vercel.com/sso/access/request"]')
-    links.forEach((link) => {
-      link.removeAttribute("href")
-    })
+    links.forEach((link) => link.removeAttribute("href"))
 
-    // Create canvas from the element
     const canvas = await html2canvas(element, {
-      scale: 2, // Higher scale for better quality
-      useCORS: true, // Allow cross-origin images
+      scale: 2,
+      useCORS: true,
       logging: false,
       allowTaint: true,
       backgroundColor: "#ffffff",
-      // Ignore any elements with URLs we don't want
-      onclone: (document) => {
-        const clonedElement = document.body.querySelector(".print-optimized") as HTMLElement
-        if (clonedElement) {
-          const unwantedElements = clonedElement.querySelectorAll('[href*="vercel.com"]')
-          unwantedElements.forEach((el) => {
+      onclone: (doc) => {
+        const cloned = doc.body.querySelector(".print-optimized") as HTMLElement
+        if (cloned) {
+          cloned.querySelectorAll('[href*="vercel.com"]').forEach((el) => {
             el.removeAttribute("href")
-            if (el.textContent && el.textContent.includes("vercel.com")) {
-              el.textContent = ""
-            }
+            if (el.textContent?.includes("vercel.com")) el.textContent = ""
           })
         }
       },
     })
 
-    // Calculate dimensions to fit on A4
-    const imgWidth = 210 // A4 width in mm
-    const pageHeight = 297 // A4 height in mm
-    const imgHeight = (canvas.height * imgWidth) / canvas.width
-
-    // Create PDF
     const pdf = new jsPDF("p", "mm", "a4")
+    const pageW = 210   // A4 width mm
+    const pageH = 297   // A4 height mm
 
-    // Add image to PDF
-    pdf.addImage(canvas.toDataURL("image/jpeg", 1.0), "JPEG", 0, 0, imgWidth, imgHeight)
+    const imgData = canvas.toDataURL("image/png")
+    // Natural height if rendered at full A4 width
+    const naturalH = (canvas.height * pageW) / canvas.width
 
-    // If content overflows a page, add additional pages
-    let heightLeft = imgHeight
-    let position = 0
-
-    while (heightLeft > pageHeight) {
-      position = heightLeft - pageHeight
-      pdf.addPage()
-      pdf.addImage(canvas.toDataURL("image/jpeg", 1.0), "JPEG", 0, -position, imgWidth, imgHeight)
-      heightLeft -= pageHeight
+    if (naturalH <= pageH * 1.15) {
+      // Content fits on one page (with up to 15% overflow tolerance — scale to fit)
+      const scale = Math.min(1, pageH / naturalH)
+      const scaledW = pageW * scale
+      const scaledH = naturalH * scale
+      const xOffset = (pageW - scaledW) / 2
+      pdf.addImage(imgData, "PNG", xOffset, 0, scaledW, scaledH)
+    } else {
+      // Multi-page: render full width across as many pages as needed
+      pdf.addImage(imgData, "PNG", 0, 0, pageW, naturalH)
+      let heightLeft = naturalH - pageH
+      let position = pageH
+      while (heightLeft > 0) {
+        pdf.addPage()
+        pdf.addImage(imgData, "PNG", 0, -position, pageW, naturalH)
+        position += pageH
+        heightLeft -= pageH
+      }
     }
 
-    // Save the PDF
     pdf.save(filename)
   } catch (error) {
     console.error("Error generating PDF:", error)
