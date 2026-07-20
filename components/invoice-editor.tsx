@@ -655,8 +655,9 @@ export default function InvoiceEditor() {
                     <Label className="text-xs font-medium text-gray-600">Personal Message (optional)</Label>
                     <Textarea placeholder="Add a personal note to the email..." value={emailMessage} onChange={e => setEmailMessage(e.target.value)} rows={3} className="resize-none text-sm mt-1" />
                   </div>
-                  <div className="bg-green-50 border border-green-200 rounded-md p-3 text-xs text-green-800">
-                    📧 Sent from <strong>noreply@gencoreit.com</strong> — includes full invoice with line items and totals. A contact note with <strong>info@gencoreit.com</strong> and <strong>0332 0000911</strong> is automatically added.
+                  <div className="bg-amber-50 border border-amber-200 rounded-md p-3 text-xs text-amber-900 space-y-1.5">
+                    <p>📧 Sent from <strong>noreply@gencoreit.com</strong> — includes full invoice with line items, totals and contact details.</p>
+                    <p>⚠️ <strong>Domain not yet verified?</strong> Emails will only deliver to your Resend account email until you verify <strong>gencoreit.com</strong> at <a href="https://resend.com/domains" target="_blank" rel="noreferrer" className="underline font-medium">resend.com/domains</a>.</p>
                   </div>
                   <div className="flex justify-end gap-2 pt-1">
                     <Button variant="outline" size="sm" onClick={() => setEmailOpen(false)} disabled={emailSending}>Cancel</Button>

@@ -238,7 +238,11 @@ export async function POST(req: NextRequest) {
 
     if (error) {
       console.error("Resend error:", error)
-      return NextResponse.json({ error: error.message }, { status: 500 })
+      const msg = error.message ?? ""
+      const friendly = msg.includes("testing email") || msg.includes("domain")
+        ? "Domain not verified. Go to resend.com/domains and verify gencoreit.com first. Until then emails can only be sent to your Resend account email."
+        : msg
+      return NextResponse.json({ error: friendly }, { status: 500 })
     }
 
     return NextResponse.json({ success: true, id: data?.id })
