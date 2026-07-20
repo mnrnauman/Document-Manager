@@ -1,0 +1,427 @@
+# Gencore Quotation & Invoice System Upgrade
+
+You are an experienced Senior Full-Stack Engineer and UI/UX Designer.
+
+I already have a working Gencore Quotation & Invoice web application hosted on Vercel. Do NOT rebuild the application from scratch. Instead, improve and extend the existing project while keeping the current architecture and codebase clean.
+
+## Primary Goal
+
+Transform the existing quotation page into a professional enterprise-grade quotation generator similar to what Cisco Partners, Fortinet Partners, Microsoft Partners, and IT System Integrators use.
+
+Everything that a user may need to edit must be configurable from the UI.
+
+Avoid hardcoded values.
+
+---
+
+# Branding
+
+I will upload the official Gencore logo.
+
+Requirements:
+
+* Do NOT simply paste the uploaded image.
+* Recreate the logo as a clean scalable vector (SVG) based on the uploaded logo.
+* Preserve the original proportions, typography, colors, spacing and outline.
+* The logo must remain sharp in PDF export and printing.
+* Replace the current logo everywhere in the application.
+
+---
+
+# Editable Company Information
+
+Create editable fields for:
+
+* Company Name
+* Company Logo
+* Address
+* Phone Number
+* Email
+* Website
+* NTN
+* STRN
+* Company Registration Number
+* Footer Text
+
+These should be stored so they can be reused in future quotations.
+
+---
+
+# Customer Information
+
+Editable fields:
+
+* Customer Name
+* Company Name
+* Contact Person
+* Email
+* Phone
+* Address
+* Project Name
+* Department
+
+---
+
+# Quotation Header
+
+Editable fields:
+
+* Quotation Number
+* Revision Number
+* Issue Date
+* Expiry Date
+* Sales Representative
+* Currency
+* Tax Status
+
+---
+
+# Executive Summary
+
+Add a rich text editor.
+
+The entire content must be editable.
+
+---
+
+# Scope of Work
+
+Create a repeatable section.
+
+Each scope item should have:
+
+* Title
+* Description
+
+Users should be able to:
+
+* Add new item
+* Delete item
+* Reorder items
+* Duplicate items
+
+Nothing should be hardcoded.
+
+---
+
+# Deliverables
+
+Create another repeatable section.
+
+Each deliverable should include:
+
+* Title
+* Description
+
+Users can:
+
+* Add
+* Delete
+* Edit
+* Reorder
+
+---
+
+# Project Timeline
+
+Editable timeline table.
+
+Columns:
+
+* Phase
+* Description
+* Duration
+* Responsible Party
+
+Users can add unlimited rows.
+
+---
+
+# Pricing Table
+
+Create an enterprise pricing table.
+
+Columns:
+
+* Item
+* Description
+* Quantity
+* Unit
+* Unit Price
+* Discount
+* Tax
+* Total
+
+Requirements:
+
+* Auto calculations
+* Editable currency
+* Dynamic totals
+* Subtotal
+* Tax
+* Grand Total
+
+Users can:
+
+* Add rows
+* Delete rows
+* Rearrange rows
+
+---
+
+# Payment Terms
+
+Create editable payment milestones.
+
+Example:
+
+50% Advance
+
+30% Deployment Completion
+
+20% Project Sign-off
+
+Users must be able to change:
+
+* Percentage
+* Description
+* Sequence
+
+---
+
+# Assumptions
+
+Repeatable list.
+
+Users can:
+
+* Add
+* Remove
+* Edit
+
+---
+
+# Exclusions
+
+Repeatable list.
+
+Users can:
+
+* Add
+* Remove
+* Edit
+
+---
+
+# Terms & Conditions
+
+Rich text editor.
+
+No hardcoded text.
+
+Allow formatting.
+
+---
+
+# Warranty
+
+Editable section.
+
+Examples:
+
+* 30 Days
+* 90 Days
+* 1 Year
+
+Should be completely configurable.
+
+---
+
+# Support
+
+Editable section.
+
+Include:
+
+* Support Hours
+* Response Time
+* Escalation Contact
+
+---
+
+# Acceptance Section
+
+Include editable fields:
+
+Customer Name
+
+Designation
+
+Signature
+
+Date
+
+Company Stamp Area
+
+---
+
+# Notes
+
+Optional rich text section.
+
+---
+
+# PDF Export
+
+Generate a professional PDF.
+
+Requirements:
+
+* A4 format
+* Proper margins
+* No layout breaking
+* High-quality SVG logo
+* Professional typography
+* Repeating header/footer
+* Correct page breaks
+* Print optimized
+
+---
+
+# Save Templates
+
+Allow users to:
+
+Save quotation as template
+
+Create multiple templates
+
+Duplicate templates
+
+Edit templates
+
+Delete templates
+
+---
+
+# Reusable Services Library
+
+Create a service catalog.
+
+Example:
+
+Firewall Deployment
+
+Network Assessment
+
+SD-WAN Deployment
+
+Wireless Survey
+
+VPN Configuration
+
+Server Installation
+
+Structured Cabling
+
+Cloud Migration
+
+Users should be able to:
+
+Add service
+
+Edit service
+
+Delete service
+
+Reuse service in quotations
+
+Nothing should be hardcoded.
+
+---
+
+# Dynamic Variables
+
+Every field in the quotation must be editable.
+
+Avoid hardcoded values.
+
+This includes:
+
+Company Information
+
+Customer Information
+
+Dates
+
+Pricing
+
+Currency
+
+Services
+
+Scope
+
+Terms
+
+Timeline
+
+Footer
+
+Everything must be dynamic.
+
+---
+
+# UI Requirements
+
+Modern enterprise design.
+
+Minimal.
+
+Professional.
+
+Consistent spacing.
+
+Responsive.
+
+Suitable for executive-level clients.
+
+Use cards, subtle shadows and clean typography.
+
+---
+
+# Code Quality
+
+Refactor existing code where necessary.
+
+Remove duplicate code.
+
+Create reusable components.
+
+Follow clean architecture.
+
+Separate:
+
+UI
+
+Business Logic
+
+PDF Generation
+
+Data Models
+
+Validation
+
+---
+
+# Final Deliverable
+
+Do not replace the existing application.
+
+Upgrade it.
+
+Preserve existing functionality.
+
+Ensure backward compatibility.
+
+The final result should feel like a premium enterprise quotation and invoice management ...
