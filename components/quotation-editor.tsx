@@ -12,7 +12,7 @@ import {
   Download, Save, FileUp, Printer, Plus, Trash2, Eye,
   Copy, ChevronUp, ChevronDown, Building2, User, Package,
   Layers, Calendar, CreditCard, FileText, BookOpen, LayoutTemplate,
-  RefreshCw, X, GripVertical,
+  RefreshCw, X, GripVertical, Mail,
 } from "lucide-react"
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
@@ -221,6 +221,11 @@ export default function QuotationEditor() {
   const printRef = useRef<HTMLDivElement>(null)
   const previewRef = useRef<HTMLDivElement>(null)
   const [previewOpen, setPreviewOpen] = useState(false)
+  const [emailOpen, setEmailOpen] = useState(false)
+  const [emailTo, setEmailTo] = useState("")
+  const [emailSubject, setEmailSubject] = useState("")
+  const [emailMessage, setEmailMessage] = useState("")
+  const [emailSending, setEmailSending] = useState(false)
   const [activeTab, setActiveTab] = useState<TabId>("company")
   const [catalogValue, setCatalogValue] = useState("")
   const [templates, setTemplates] = useState<QuotationTemplate[]>([])
@@ -410,6 +415,36 @@ export default function QuotationEditor() {
   const subtotal = formData.items.reduce((s, it) => s + itemBase(it), 0)
   const totalTax = formData.items.reduce((s, it) => s + itemBase(it) * (it.taxRate / 100), 0)
   const grandTotal = subtotal + totalTax
+
+  // ── Email ──────────────────────────────────────────────────────────────────
+
+  async function handleSendEmail() {
+    if (!emailTo.trim()) { toast({ title: "Enter recipient email", variant: "destructive" }); return }
+    setEmailSending(true)
+    try {
+      const res = await fetch("/api/send-quotation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to: emailTo.trim(),
+          subject: emailSubject.trim() || undefined,
+          message: emailMessage.trim() || undefined,
+          formData,
+        }),
+      })
+      const json = await res.json()
+      if (!res.ok) throw new Error(json.error ?? "Failed to send")
+      toast({ title: "Email sent!", description: `Quotation sent to ${emailTo}` })
+      setEmailOpen(false)
+      setEmailTo("")
+      setEmailSubject("")
+      setEmailMessage("")
+    } catch (err: any) {
+      toast({ title: "Send failed", description: err.message, variant: "destructive" })
+    } finally {
+      setEmailSending(false)
+    }
+  }
 
   // ── PDF / Print ────────────────────────────────────────────────────────────
 
@@ -1276,6 +1311,71 @@ export default function QuotationEditor() {
           <Button onClick={handlePrint} size="sm" variant="outline" className="flex items-center gap-1.5 h-8 text-xs">
             <Printer size={13} /> Print
           </Button>
+
+          {/* ── Email Dialog ── */}
+          <Dialog open={emailOpen} onOpenChange={setEmailOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm" className="flex items-center gap-1.5 bg-green-600 hover:bg-green-700 h-8 text-xs">
+                <Mail size={13} /> Email
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <Mail size={16} className="text-green-600" /> Send Quotation by Email
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-3 mt-2">
+                <div>
+                  <Label className="text-xs font-medium text-gray-600">Recipient Email *</Label>
+                  <Input
+                    type="email"
+                    placeholder="client@example.com"
+                    value={emailTo}
+                    onChange={e => setEmailTo(e.target.value)}
+                    className="h-9 text-sm mt-1"
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs font-medium text-gray-600">Subject (optional)</Label>
+                  <Input
+                    placeholder={`Quotation${formData.quotationNumber ? ` ${formData.quotationNumber}` : ""} from GENCORE`}
+                    value={emailSubject}
+                    onChange={e => setEmailSubject(e.target.value)}
+                    className="h-9 text-sm mt-1"
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs font-medium text-gray-600">Personal Message (optional)</Label>
+                  <Textarea
+                    placeholder="Add a personal note to the email..."
+                    value={emailMessage}
+                    onChange={e => setEmailMessage(e.target.value)}
+                    rows={3}
+                    className="resize-none text-sm mt-1"
+                  />
+                </div>
+                <div className="bg-green-50 border border-green-200 rounded-md p-3 text-xs text-green-800">
+                  📧 Sent from <strong>noreply@gencoreit.com</strong> — includes full pricing, scope &amp; payment terms. A contact note with <strong>info@gencoreit.com</strong> and <strong>0332 0000911</strong> is automatically added.
+                </div>
+                <div className="flex justify-end gap-2 pt-1">
+                  <Button variant="outline" size="sm" onClick={() => setEmailOpen(false)} disabled={emailSending}>Cancel</Button>
+                  <Button
+                    size="sm"
+                    onClick={handleSendEmail}
+                    disabled={emailSending || !emailTo.trim()}
+                    className="bg-green-600 hover:bg-green-700 flex items-center gap-1.5"
+                  >
+                    {emailSending ? (
+                      <><RefreshCw size={13} className="animate-spin" /> Sending…</>
+                    ) : (
+                      <><Mail size={13} /> Send Email</>
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
 
