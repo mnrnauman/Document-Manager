@@ -129,7 +129,7 @@ const DEFAULT_FORM: FormData = {
     registrationNumber: "",
     footerText: "The Core of Digital Transformation.",
     description:
-      "Providing New and Used IT Equipment including Servers, Laptops, Systems, Firewalls, Routers, and Switches, along with comprehensive IT Solutions.",
+      "Gencore delivers end-to-end enterprise technology solutions, including IT infrastructure, networking, cybersecurity, cloud computing, AI-powered surveillance, software development, system integration, managed IT services, and the supply, deployment, and support of enterprise IT hardware and software.",
   },
   quotationNumber: "",
   revisionNumber: "1",

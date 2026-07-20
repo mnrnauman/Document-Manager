@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
-import { Download, Save, FileUp, Printer, Plus, Trash2, Eye } from "lucide-react"
+import { Download, Save, FileUp, Printer, Plus, Trash2, Eye, Mail, RefreshCw } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { generatePDF } from "@/utils/pdf-generator"
 import { catalogItems } from "@/lib/predefined-items"
@@ -27,6 +27,11 @@ export default function InvoiceEditor() {
   const previewRef = useRef<HTMLDivElement>(null)
   const [previewOpen, setPreviewOpen] = useState(false)
   const [catalogValue, setCatalogValue] = useState("")
+  const [emailOpen, setEmailOpen] = useState(false)
+  const [emailTo, setEmailTo] = useState("")
+  const [emailSubject, setEmailSubject] = useState("")
+  const [emailMessage, setEmailMessage] = useState("")
+  const [emailSending, setEmailSending] = useState(false)
 
   const [formData, setFormData] = useState({
     invoiceNumber: "",
@@ -38,7 +43,7 @@ export default function InvoiceEditor() {
       email: "nauman@gencoreit.com",
       website: "www.gencoreit.com",
       description:
-        "Providing New and Used IT Equipment including Servers, Laptops, Systems, Firewalls, Routers, and Switches, along with comprehensive IT Solutions.",
+        "Gencore delivers end-to-end enterprise technology solutions, including IT infrastructure, networking, cybersecurity, cloud computing, AI-powered surveillance, software development, system integration, managed IT services, and the supply, deployment, and support of enterprise IT hardware and software.",
     },
     client: {
       name: "",
@@ -183,6 +188,32 @@ export default function InvoiceEditor() {
     }
   }
 
+  async function handleSendEmail() {
+    if (!emailTo.trim()) { toast({ title: "Enter recipient email", variant: "destructive" }); return }
+    setEmailSending(true)
+    try {
+      const res = await fetch("/api/send-invoice", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          to: emailTo.trim(),
+          subject: emailSubject.trim() || undefined,
+          message: emailMessage.trim() || undefined,
+          formData,
+        }),
+      })
+      const json = await res.json()
+      if (!res.ok) throw new Error(json.error ?? "Failed to send")
+      toast({ title: "Email sent!", description: `Invoice sent to ${emailTo}` })
+      setEmailOpen(false)
+      setEmailTo(""); setEmailSubject(""); setEmailMessage("")
+    } catch (err: any) {
+      toast({ title: "Send failed", description: err.message, variant: "destructive" })
+    } finally {
+      setEmailSending(false)
+    }
+  }
+
   const handleSave = () => {
     localStorage.setItem("invoice_draft", JSON.stringify(formData))
     toast({ title: "Draft saved", description: "Your invoice draft has been saved locally" })
@@ -232,9 +263,11 @@ export default function InvoiceEditor() {
       </div>
 
       {/* Description */}
-      <div className={`text-gray-600 ${forPDF ? "my-1" : "my-3"}`} style={{ fontSize: "10px" }}>
-        <p>{formData.companyInfo.description}</p>
-      </div>
+      {formData.companyInfo.description && (
+        <div className={`text-gray-600 italic border-l-2 border-[#1e40af] pl-2 bg-gray-50 rounded-r ${forPDF ? "my-1 py-1" : "my-3 py-2"}`} style={{ fontSize: forPDF ? "9px" : "11px" }}>
+          <p>{formData.companyInfo.description}</p>
+        </div>
+      )}
 
       {/* Title */}
       <div className={`text-center ${forPDF ? "my-2" : "my-3"}`}>
@@ -595,6 +628,45 @@ export default function InvoiceEditor() {
               <Printer size={16} />
               Print
             </Button>
+
+            {/* Email Dialog */}
+            <Dialog open={emailOpen} onOpenChange={setEmailOpen}>
+              <DialogTrigger asChild>
+                <Button className="flex items-center gap-2 bg-green-600 hover:bg-green-700">
+                  <Mail size={16} /> Email
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-md">
+                <DialogHeader>
+                  <DialogTitle className="flex items-center gap-2">
+                    <Mail size={16} className="text-green-600" /> Send Invoice by Email
+                  </DialogTitle>
+                </DialogHeader>
+                <div className="space-y-3 mt-2">
+                  <div>
+                    <Label className="text-xs font-medium text-gray-600">Recipient Email *</Label>
+                    <Input type="email" placeholder="client@example.com" value={emailTo} onChange={e => setEmailTo(e.target.value)} className="h-9 text-sm mt-1" />
+                  </div>
+                  <div>
+                    <Label className="text-xs font-medium text-gray-600">Subject (optional)</Label>
+                    <Input placeholder={`Invoice${formData.invoiceNumber ? ` ${formData.invoiceNumber}` : ""} from GENCORE`} value={emailSubject} onChange={e => setEmailSubject(e.target.value)} className="h-9 text-sm mt-1" />
+                  </div>
+                  <div>
+                    <Label className="text-xs font-medium text-gray-600">Personal Message (optional)</Label>
+                    <Textarea placeholder="Add a personal note to the email..." value={emailMessage} onChange={e => setEmailMessage(e.target.value)} rows={3} className="resize-none text-sm mt-1" />
+                  </div>
+                  <div className="bg-green-50 border border-green-200 rounded-md p-3 text-xs text-green-800">
+                    📧 Sent from <strong>noreply@gencoreit.com</strong> — includes full invoice with line items and totals. A contact note with <strong>info@gencoreit.com</strong> and <strong>0332 0000911</strong> is automatically added.
+                  </div>
+                  <div className="flex justify-end gap-2 pt-1">
+                    <Button variant="outline" size="sm" onClick={() => setEmailOpen(false)} disabled={emailSending}>Cancel</Button>
+                    <Button size="sm" onClick={handleSendEmail} disabled={emailSending || !emailTo.trim()} className="bg-green-600 hover:bg-green-700 flex items-center gap-1.5">
+                      {emailSending ? <><RefreshCw size={13} className="animate-spin" /> Sending…</> : <><Mail size={13} /> Send Email</>}
+                    </Button>
+                  </div>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </div>

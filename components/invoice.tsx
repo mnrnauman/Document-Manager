@@ -53,8 +53,9 @@ export default function Invoice() {
         {/* Business Description */}
         <div className="mt-4 mb-6 text-sm text-gray-600 italic border-l-2 border-[#1e40af] pl-3 bg-gray-50 py-2 rounded-r-md">
           <p>
-            Providing New and Used IT Equipment including Servers, Laptops, Systems, Firewalls, Routers, and Switches,
-            along with comprehensive IT Solutions.
+            Gencore delivers end-to-end enterprise technology solutions, including IT infrastructure, networking,
+            cybersecurity, cloud computing, AI-powered surveillance, software development, system integration,
+            managed IT services, and the supply, deployment, and support of enterprise IT hardware and software.
           </p>
         </div>
 
