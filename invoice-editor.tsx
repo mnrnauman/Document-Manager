@@ -323,7 +323,7 @@ export default function InvoiceEditor() {
     // Generate random bank details
     const randomBank = {
       bankName: getRandomItem(sampleBanks),
-      accountTitle: "Gencore IT Solutions",
+      accountTitle: "GENCORE",
       iban:
         "PK" +
         Math.floor(Math.random() * 1000000000000000)
@@ -780,15 +780,15 @@ export default function InvoiceEditor() {
                     <div className="flex justify-between items-start border-b pb-4">
                       <div className="flex items-center gap-3">
                         <Image
-                          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Right%20Logo-pcG5xhUOcBvEaMtBemNZplMKUox6rR.png"
-                          alt="Gencore IT Solutions Logo"
+                          src="/logo.png"
+                          alt="GENCORE Logo"
                           width={50}
                           height={50}
                           className="object-contain"
                         />
                         <div>
-                          <h1 className="text-xl font-bold text-[#1e40af]">Gencore IT Solutions</h1>
-                          <p className="text-[#f97316] text-xs font-medium">Next Generation Core IT Solutions</p>
+                          <h1 className="text-xl font-bold text-[#1e40af]">GENCORE</h1>
+                          <p className="text-[#f97316] text-xs font-medium">The Core of Digital Transformation.</p>
                         </div>
                       </div>
                       <div className="text-right text-xs text-gray-600">
@@ -1012,7 +1012,7 @@ export default function InvoiceEditor() {
 
                     {/* Footer */}
                     <div className="mt-8 pt-2 border-t border-gray-200 text-center">
-                      <p className="text-xs text-[#1e40af] font-medium">Next Generation Core IT Solutions</p>
+                      <p className="text-xs text-[#1e40af] font-medium">The Core of Digital Transformation.</p>
                       <p className="text-xs text-gray-500 mt-0.5">
                         +92 332 0000911 | nauman@gencoreit.com | www.gencoreit.com
                       </p>
@@ -1055,15 +1055,15 @@ export default function InvoiceEditor() {
               <div className="flex justify-between items-start border-b pb-4">
                 <div className="flex items-center gap-3">
                   <Image
-                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Right%20Logo-pcG5xhUOcBvEaMtBemNZplMKUox6rR.png"
-                    alt="Gencore IT Solutions Logo"
+                    src="/logo.png"
+                    alt="GENCORE Logo"
                     width={50}
                     height={50}
                     className="object-contain"
                   />
                   <div>
-                    <h1 className="text-xl font-bold text-[#1e40af]">Gencore IT Solutions</h1>
-                    <p className="text-[#f97316] text-xs font-medium">Next Generation Core IT Solutions</p>
+                    <h1 className="text-xl font-bold text-[#1e40af]">GENCORE</h1>
+                    <p className="text-[#f97316] text-xs font-medium">The Core of Digital Transformation.</p>
                   </div>
                 </div>
                 <div className="text-right text-xs text-gray-600">
@@ -1232,7 +1232,7 @@ export default function InvoiceEditor() {
 
               {/* Footer */}
               <div className="mt-8 pt-2 border-t border-gray-200 text-center">
-                <p className="text-xs text-[#1e40af] font-medium">Next Generation Core IT Solutions</p>
+                <p className="text-xs text-[#1e40af] font-medium">The Core of Digital Transformation.</p>
                 <p className="text-xs text-gray-500 mt-0.5">
                   +92 332 0000911 | nauman@gencoreit.com | www.gencoreit.com
                 </p>

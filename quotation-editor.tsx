@@ -57,7 +57,7 @@ export default function QuotationEditor() {
       "Installation and configuration services are included unless otherwise specified.",
       "Prices are exclusive of any applicable taxes unless specified.",
     ],
-    notes: "Thank you for considering Gencore IT Solutions. We look forward to working with you.",
+    notes: "Thank you for considering GENCORE. We look forward to working with you.",
     authorizedBy: "",
   })
 
@@ -518,15 +518,15 @@ export default function QuotationEditor() {
                     <div className="flex justify-between items-start border-b pb-4">
                       <div className="flex items-center gap-3">
                         <Image
-                          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Right%20Logo-pcG5xhUOcBvEaMtBemNZplMKUox6rR.png"
-                          alt="Gencore IT Solutions Logo"
+                          src="/logo.png"
+                          alt="GENCORE Logo"
                           width={50}
                           height={50}
                           className="object-contain"
                         />
                         <div>
-                          <h1 className="text-xl font-bold text-[#1e40af]">Gencore IT Solutions</h1>
-                          <p className="text-[#f97316] text-xs font-medium">Next Generation Core IT Solutions</p>
+                          <h1 className="text-xl font-bold text-[#1e40af]">GENCORE</h1>
+                          <p className="text-[#f97316] text-xs font-medium">The Core of Digital Transformation.</p>
                         </div>
                       </div>
                       <div className="text-right text-xs text-gray-600">
@@ -685,7 +685,7 @@ export default function QuotationEditor() {
                     <div className="mb-4 mt-8">
                       <div className="grid grid-cols-2 gap-6">
                         <div>
-                          <p className="text-xs text-gray-700 mb-1">Authorized by (Gencore IT Solutions):</p>
+                          <p className="text-xs text-gray-700 mb-1">Authorized by (GENCORE):</p>
                           <div className="border-b border-gray-300 h-6 mb-1"></div>
                           <p className="text-xs text-gray-500">{formData.authorizedBy || "Name & Signature"}</p>
                         </div>
@@ -699,7 +699,7 @@ export default function QuotationEditor() {
 
                     {/* Footer */}
                     <div className="mt-8 pt-2 border-t border-gray-200 text-center">
-                      <p className="text-xs text-[#1e40af] font-medium">Next Generation Core IT Solutions</p>
+                      <p className="text-xs text-[#1e40af] font-medium">The Core of Digital Transformation.</p>
                       <p className="text-xs text-gray-500 mt-0.5">+92 332 0000911 | nauman@gencoreit.com</p>
                     </div>
                   </div>
@@ -740,15 +740,15 @@ export default function QuotationEditor() {
               <div className="flex justify-between items-start border-b pb-4">
                 <div className="flex items-center gap-3">
                   <Image
-                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Right%20Logo-pcG5xhUOcBvEaMtBemNZplMKUox6rR.png"
-                    alt="Gencore IT Solutions Logo"
+                    src="/logo.png"
+                    alt="GENCORE Logo"
                     width={50}
                     height={50}
                     className="object-contain"
                   />
                   <div>
-                    <h1 className="text-xl font-bold text-[#1e40af]">Gencore IT Solutions</h1>
-                    <p className="text-[#f97316] text-xs font-medium">Next Generation Core IT Solutions</p>
+                    <h1 className="text-xl font-bold text-[#1e40af]">GENCORE</h1>
+                    <p className="text-[#f97316] text-xs font-medium">The Core of Digital Transformation.</p>
                   </div>
                 </div>
                 <div className="text-right text-xs text-gray-600">
@@ -898,7 +898,7 @@ export default function QuotationEditor() {
               <div className="mb-4 mt-8">
                 <div className="grid grid-cols-2 gap-6">
                   <div>
-                    <p className="text-xs text-gray-700 mb-1">Authorized by (Gencore IT Solutions):</p>
+                    <p className="text-xs text-gray-700 mb-1">Authorized by (GENCORE):</p>
                     <div className="border-b border-gray-300 h-6 mb-1"></div>
                     <p className="text-xs text-gray-500">{formData.authorizedBy || "Name & Signature"}</p>
                   </div>
@@ -912,7 +912,7 @@ export default function QuotationEditor() {
 
               {/* Footer */}
               <div className="mt-8 pt-2 border-t border-gray-200 text-center">
-                <p className="text-xs text-[#1e40af] font-medium">Next Generation Core IT Solutions</p>
+                <p className="text-xs text-[#1e40af] font-medium">The Core of Digital Transformation.</p>
                 <p className="text-xs text-gray-500 mt-0.5">+92 332 0000911 | nauman@gencoreit.com</p>
               </div>
             </div>

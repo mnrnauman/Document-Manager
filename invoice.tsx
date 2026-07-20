@@ -27,8 +27,8 @@ export default function Invoice() {
                 <div className="absolute -inset-1 bg-gradient-to-r from-[#1e40af] to-[#f97316] rounded-full blur-sm opacity-30"></div>
                 <div className="relative">
                   <Image
-                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Right%20Logo-pcG5xhUOcBvEaMtBemNZplMKUox6rR.png"
-                    alt="Gencore IT Solutions Logo"
+                    src="/logo.png"
+                    alt="GENCORE Logo"
                     width={80}
                     height={80}
                     className="object-contain"
@@ -36,8 +36,8 @@ export default function Invoice() {
                 </div>
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-[#1e40af]">Gencore IT Solutions</h1>
-                <p className="text-[#f97316] text-sm font-medium">Next Generation Core IT Solutions</p>
+                <h1 className="text-2xl font-bold text-[#1e40af]">GENCORE</h1>
+                <p className="text-[#f97316] text-sm font-medium">The Core of Digital Transformation.</p>
               </div>
             </div>
             <div className="text-right mt-4 md:mt-0 text-sm text-gray-600">
@@ -259,7 +259,7 @@ export default function Invoice() {
         <div className="relative mt-12">
           <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-[#1e40af] to-[#f97316]"></div>
           <div className="border-t border-gray-200 pt-4 pb-6 text-center">
-            <p className="text-sm text-[#1e40af] font-medium">Next Generation Core IT Solutions</p>
+            <p className="text-sm text-[#1e40af] font-medium">The Core of Digital Transformation.</p>
             <p className="text-xs text-gray-500 mt-1">www.Gencoreit.com | +92 332 0000911 | nauman@gencoreit.com</p>
           </div>
         </div>

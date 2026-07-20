@@ -27,8 +27,8 @@ export default function Quotation() {
                 <div className="absolute -inset-1 bg-gradient-to-r from-[#1e40af] to-[#f97316] rounded-full blur-sm opacity-30"></div>
                 <div className="relative">
                   <Image
-                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Right%20Logo-pcG5xhUOcBvEaMtBemNZplMKUox6rR.png"
-                    alt="Gencore IT Solutions Logo"
+                    src="/logo.png"
+                    alt="GENCORE Logo"
                     width={80}
                     height={80}
                     className="object-contain"
@@ -36,8 +36,8 @@ export default function Quotation() {
                 </div>
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-[#1e40af]">Gencore IT Solutions</h1>
-                <p className="text-[#f97316] text-sm font-medium">Next Generation Core IT Solutions</p>
+                <h1 className="text-2xl font-bold text-[#1e40af]">GENCORE</h1>
+                <p className="text-[#f97316] text-sm font-medium">The Core of Digital Transformation.</p>
               </div>
             </div>
             <div className="text-right mt-4 md:mt-0 text-sm text-gray-600">
@@ -241,7 +241,7 @@ export default function Quotation() {
         <div className="mb-8 bg-gray-50 p-4 rounded-lg border border-gray-100 shadow-sm">
           <h3 className="font-semibold text-[#1e40af] mb-2 border-b pb-1">Notes</h3>
           <p className="text-gray-600 text-sm">
-            Thank you for considering Gencore IT Solutions. We look forward to working with you. Please feel free to
+            Thank you for considering GENCORE. We look forward to working with you. Please feel free to
             contact us if you have any questions regarding this quotation or if you require any customizations to better
             suit your needs.
           </p>
@@ -251,7 +251,7 @@ export default function Quotation() {
         <div className="mb-8 mt-12">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
-              <p className="text-gray-700 mb-1">Authorized by (Gencore IT Solutions):</p>
+              <p className="text-gray-700 mb-1">Authorized by (GENCORE):</p>
               <div className="border-b border-gray-300 h-8 mb-1"></div>
               <p className="text-gray-500 text-sm">Name & Signature</p>
             </div>
@@ -267,7 +267,7 @@ export default function Quotation() {
         <div className="relative mt-12">
           <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-[#1e40af] to-[#f97316]"></div>
           <div className="border-t border-gray-200 pt-4 pb-6 text-center">
-            <p className="text-sm text-[#1e40af] font-medium">Next Generation Core IT Solutions</p>
+            <p className="text-sm text-[#1e40af] font-medium">The Core of Digital Transformation.</p>
             <p className="text-xs text-gray-500 mt-1">www.Gencoreit.com | +92 332 0000911 | nauman@gencoreit.com</p>
           </div>
         </div>

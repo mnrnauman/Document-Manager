@@ -21,7 +21,7 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
 
   useEffect(() => {
     // Update document title for consistent branding
-    document.title = "Secure Login | Gencore IT Solutions"
+    document.title = "Secure Login | GENCORE"
   }, [])
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -34,7 +34,7 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
       if (username === "mnrnauman" && password === "precision9911") {
         document.cookie = "gencoreAuth=true; path=/; SameSite=Lax"
         onLogin(true)
-        document.title = "Document Generator | Gencore IT Solutions"
+        document.title = "Document Generator | GENCORE"
       } else {
         setError("Invalid username or password. Please try again.")
         setIsLoading(false)
@@ -51,16 +51,16 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
               <div className="absolute -inset-1 bg-gradient-to-r from-[#1e40af] to-[#f97316] rounded-full blur-sm opacity-30"></div>
               <div className="relative">
                 <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Right%20Logo-pcG5xhUOcBvEaMtBemNZplMKUox6rR.png"
-                  alt="Gencore IT Solutions Logo"
+                  src="/logo.png"
+                  alt="GENCORE Logo"
                   width={80}
                   height={80}
                   className="object-contain"
                 />
               </div>
             </div>
-            <h1 className="text-2xl font-bold text-[#1e40af]">Gencore IT Solutions</h1>
-            <p className="text-[#f97316] text-sm font-medium">Document Generator - Secure Access</p>
+            <h1 className="text-2xl font-bold text-[#1e40af]">GENCORE</h1>
+            <p className="text-[#f97316] text-sm font-medium">The Core of Digital Transformation.</p>
           </div>
 
           <div className="relative">

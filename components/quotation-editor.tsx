@@ -67,7 +67,7 @@ export default function QuotationEditor() {
       "Installation and configuration services are included unless otherwise specified.",
       "Prices are exclusive of any applicable taxes unless specified.",
     ],
-    notes: "Thank you for considering Gencore IT Solutions. We look forward to working with you.",
+    notes: "Thank you for considering GENCORE. We look forward to working with you.",
     authorizedBy: "",
   })
 
@@ -234,15 +234,15 @@ export default function QuotationEditor() {
       <div className={`flex justify-between items-start border-b ${forPDF ? "pb-2 mb-1" : "pb-4 mb-2"}`}>
         <div className="flex items-center gap-2">
           <Image
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Right%20Logo-pcG5xhUOcBvEaMtBemNZplMKUox6rR.png"
-            alt="Gencore IT Solutions Logo"
+            src="/logo.png"
+            alt="GENCORE Logo"
             width={forPDF ? 40 : 55}
             height={forPDF ? 40 : 55}
             className="object-contain"
           />
           <div>
-            <h1 className={`font-bold text-[#1e40af] ${forPDF ? "text-base" : "text-2xl"}`}>Gencore IT Solutions</h1>
-            <p className="text-[#f97316] font-medium" style={forPDF ? { fontSize: "10px" } : { fontSize: "12px" }}>Next Generation Core IT Solutions</p>
+            <h1 className={`font-bold text-[#1e40af] ${forPDF ? "text-base" : "text-2xl"}`}>GENCORE</h1>
+            <p className="text-[#f97316] font-medium" style={forPDF ? { fontSize: "10px" } : { fontSize: "12px" }}>The Core of Digital Transformation.</p>
           </div>
         </div>
         <div className="text-right text-gray-600" style={{ fontSize: "10px" }}>
@@ -352,7 +352,7 @@ export default function QuotationEditor() {
       {/* Signatures */}
       <div className={`grid grid-cols-2 gap-6 ${forPDF ? "mt-3 mb-2" : "mt-6 mb-4"}`}>
         <div>
-          <p className="text-gray-700 mb-1" style={{ fontSize: "10px" }}>Authorized by (Gencore IT Solutions):</p>
+          <p className="text-gray-700 mb-1" style={{ fontSize: "10px" }}>Authorized by (GENCORE):</p>
           <div className="border-b border-gray-300 h-5 mb-1" />
           <p className="text-gray-500" style={{ fontSize: "9px" }}>{formData.authorizedBy || "Name & Signature"}</p>
         </div>
@@ -365,7 +365,7 @@ export default function QuotationEditor() {
 
       {/* Footer */}
       <div className={`pt-2 border-t border-gray-200 text-center ${forPDF ? "mt-2" : "mt-6"}`}>
-        <p className={`text-[#1e40af] font-medium ${rowText}`}>Next Generation Core IT Solutions</p>
+        <p className={`text-[#1e40af] font-medium ${rowText}`}>The Core of Digital Transformation.</p>
         <p className="text-gray-500 mt-0.5" style={{ fontSize: "10px" }}>
           {formData.companyInfo.phone} | {formData.companyInfo.email} | {formData.companyInfo.website}
         </p>

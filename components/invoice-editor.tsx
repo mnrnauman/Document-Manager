@@ -212,15 +212,15 @@ export default function InvoiceEditor() {
       <div className={`flex justify-between items-start border-b ${forPDF ? "pb-2 mb-1" : "pb-4 mb-2"}`}>
         <div className="flex items-center gap-2">
           <Image
-            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Right%20Logo-pcG5xhUOcBvEaMtBemNZplMKUox6rR.png"
-            alt="Gencore IT Solutions Logo"
+            src="/logo.png"
+            alt="GENCORE Logo"
             width={forPDF ? 40 : 55}
             height={forPDF ? 40 : 55}
             className="object-contain"
           />
           <div>
-            <h1 className={`font-bold text-[#1e40af] ${forPDF ? "text-base" : "text-2xl"}`}>Gencore IT Solutions</h1>
-            <p className="text-[#f97316] font-medium" style={forPDF ? { fontSize: "10px" } : { fontSize: "12px" }}>Next Generation Core IT Solutions</p>
+            <h1 className={`font-bold text-[#1e40af] ${forPDF ? "text-base" : "text-2xl"}`}>GENCORE</h1>
+            <p className="text-[#f97316] font-medium" style={forPDF ? { fontSize: "10px" } : { fontSize: "12px" }}>The Core of Digital Transformation.</p>
           </div>
         </div>
         <div className="text-right text-gray-600" style={{ fontSize: "10px" }}>
@@ -333,7 +333,7 @@ export default function InvoiceEditor() {
 
       {/* Footer */}
       <div className={`pt-2 border-t border-gray-200 text-center ${forPDF ? "mt-3" : "mt-6"}`}>
-        <p className={`text-[#1e40af] font-medium ${rowText}`}>Next Generation Core IT Solutions</p>
+        <p className={`text-[#1e40af] font-medium ${rowText}`}>The Core of Digital Transformation.</p>
         <p className="text-gray-500 mt-0.5" style={{ fontSize: "10px" }}>
           {formData.companyInfo.phone} | {formData.companyInfo.email} | {formData.companyInfo.website}
         </p>

@@ -8,25 +8,25 @@ const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | Gencore IT Solutions",
-    default: "Document Generator | Gencore IT Solutions",
+    template: "%s | GENCORE",
+    default: "Document Generator | GENCORE",
   },
-  description: "Professional document generator for Gencore IT Solutions",
+  description: "Professional document generator for GENCORE",
   metadataBase: new URL("https://document.gencoreit.com"),
   alternates: {
     canonical: "/",
   },
   authors: [
     {
-      name: "Gencore IT Solutions",
+      name: "GENCORE",
       url: "https://gencoreit.com",
     },
   ],
   generator: "Next.js",
-  applicationName: "Gencore IT Document Generator",
-  keywords: ["Gencore IT", "document generator", "invoice", "quotation", "letterhead"],
-  creator: "Gencore IT Solutions",
-  publisher: "Gencore IT Solutions",
+  applicationName: "GENCORE Document Generator",
+  keywords: ["GENCORE", "document generator", "invoice", "quotation", "letterhead"],
+  creator: "GENCORE",
+  publisher: "GENCORE",
   formatDetection: {
     email: false,
     address: false,
@@ -51,22 +51,22 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_US",
     url: "https://document.gencoreit.com",
-    title: "Document Generator | Gencore IT Solutions",
-    description: "Professional document generator for Gencore IT Solutions",
-    siteName: "Gencore IT Solutions",
+    title: "Document Generator | GENCORE",
+    description: "Professional document generator for GENCORE",
+    siteName: "GENCORE",
     images: [
       {
         url: "https://document.gencoreit.com/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Gencore IT Solutions",
+        alt: "GENCORE",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Document Generator | Gencore IT Solutions",
-    description: "Professional document generator for Gencore IT Solutions",
+    title: "Document Generator | GENCORE",
+    description: "Professional document generator for GENCORE",
     images: ["https://document.gencoreit.com/og-image.jpg"],
   },
 }
@@ -86,7 +86,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         {/* Force the browser to use our title */}
-        <title>Document Generator | Gencore IT Solutions</title>
+        <title>Document Generator | GENCORE</title>
 
         {/* Additional meta tags for consistent domain display */}
         <meta property="og:site_name" content="document.gencoreit.com" />

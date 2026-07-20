@@ -7,7 +7,7 @@ export default function LetterheadPage() {
       <div className="max-w-6xl mx-auto bg-white rounded-lg shadow-md p-6 md:p-8">
         <div className="mb-6 text-center">
           <h1 className="text-2xl md:text-3xl font-bold text-[#1e40af] mb-1">
-            Gencore IT Solutions
+            GENCORE
           </h1>
           <p className="text-gray-500 text-sm">Document Generator</p>
         </div>

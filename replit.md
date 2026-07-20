@@ -1,6 +1,6 @@
-# Gencore IT Solutions - Document Generator
+# GENCORE - Document Generator
 
-A Next.js web application for generating professional business documents (invoices, quotations, letterheads) for Gencore IT Solutions.
+A Next.js web application for generating professional business documents (invoices, quotations, letterheads) for GENCORE.
 
 ## Architecture
 
