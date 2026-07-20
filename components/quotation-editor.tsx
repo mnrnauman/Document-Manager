@@ -447,7 +447,7 @@ export default function QuotationEditor() {
     try {
       const raw = localStorage.getItem("quotation_draft")
       if (!raw) { toast({ title: "No draft", description: "No saved draft found", variant: "destructive" }); return }
-      setFormData(JSON.parse(raw))
+      setFormData(mergeWithDefaults(JSON.parse(raw)))
       toast({ title: "Draft loaded" })
     } catch {
       localStorage.removeItem("quotation_draft")
@@ -468,8 +468,28 @@ export default function QuotationEditor() {
     toast({ title: "Template saved", description: `"${name}" saved` })
   }
 
+  function mergeWithDefaults(data: Partial<FormData>): FormData {
+    return {
+      ...DEFAULT_FORM,
+      ...data,
+      companyInfo: { ...DEFAULT_FORM.companyInfo, ...(data.companyInfo ?? {}) },
+      client: { ...DEFAULT_FORM.client, ...(data.client ?? {}) },
+      support: { ...DEFAULT_FORM.support, ...(data.support ?? {}) },
+      acceptance: { ...DEFAULT_FORM.acceptance, ...(data.acceptance ?? {}) },
+      scopeItems: data.scopeItems ?? DEFAULT_FORM.scopeItems,
+      deliverables: data.deliverables ?? DEFAULT_FORM.deliverables,
+      timeline: data.timeline ?? DEFAULT_FORM.timeline,
+      items: data.items ?? DEFAULT_FORM.items,
+      paymentTerms: data.paymentTerms ?? DEFAULT_FORM.paymentTerms,
+      assumptions: data.assumptions ?? DEFAULT_FORM.assumptions,
+      exclusions: data.exclusions ?? DEFAULT_FORM.exclusions,
+      outOfScope: data.outOfScope ?? DEFAULT_FORM.outOfScope,
+      terms: data.terms ?? DEFAULT_FORM.terms,
+    }
+  }
+
   function loadTemplate(tpl: QuotationTemplate) {
-    setFormData(tpl.data)
+    setFormData(mergeWithDefaults(tpl.data))
     toast({ title: "Template loaded", description: `"${tpl.name}" loaded` })
   }
 
@@ -576,9 +596,9 @@ export default function QuotationEditor() {
             <div className="space-y-1">
               {formData.scopeItems.map((s, i) => (
                 <div key={s.id} className="flex gap-2">
-                  <span className={`font-bold text-[#1e40af] shrink-0 ${sm}`}>{i + 1}.</span>
+                  <span className={`text-gray-500 shrink-0 ${sm}`}>{i + 1}.</span>
                   <div>
-                    <p className={`font-semibold text-gray-800 ${sm}`}>{s.title}</p>
+                    <p className={`font-medium text-gray-800 ${sm}`}>{s.title}</p>
                     {s.description && <p className={`text-gray-600 ${sm}`}>{s.description}</p>}
                   </div>
                 </div>
@@ -594,9 +614,9 @@ export default function QuotationEditor() {
             <div className="space-y-1">
               {formData.deliverables.map((d, i) => (
                 <div key={d.id} className="flex gap-2">
-                  <span className={`font-bold text-[#f97316] shrink-0 ${sm}`}>{i + 1}.</span>
+                  <span className={`text-gray-500 shrink-0 ${sm}`}>{i + 1}.</span>
                   <div>
-                    <p className={`font-semibold text-gray-800 ${sm}`}>{d.title}</p>
+                    <p className={`font-medium text-gray-800 ${sm}`}>{d.title}</p>
                     {d.description && <p className={`text-gray-600 ${sm}`}>{d.description}</p>}
                   </div>
                 </div>
