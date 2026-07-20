@@ -91,6 +91,7 @@ interface FormData {
   paymentTerms: PaymentMilestone[]
   assumptions: string[]
   exclusions: string[]
+  outOfScope: string[]
   terms: string[]
   warranty: string
   support: {
@@ -155,6 +156,9 @@ const DEFAULT_FORM: FormData = {
   exclusions: [
     "Civil works and physical infrastructure are not included.",
     "Third-party vendor management is not included unless specified.",
+  ],
+  outOfScope: [
+    "Any item, service, feature, or deliverable not explicitly mentioned in the Scope of Work shall be considered out of scope and may require a separate quotation or change request.",
   ],
   terms: [
     "This quotation is valid for 30 days from the date of issue.",
@@ -387,17 +391,17 @@ export default function QuotationEditor() {
     })
   }
 
-  // ── String arrays (terms, assumptions, exclusions) ─────────────────────────
+  // ── String arrays (terms, assumptions, exclusions, outOfScope) ────────────
 
-  function addStrItem(key: "terms" | "assumptions" | "exclusions") {
+  function addStrItem(key: "terms" | "assumptions" | "exclusions" | "outOfScope") {
     setFormData(prev => ({ ...prev, [key]: [...prev[key], ""] }))
   }
 
-  function updateStrItem(key: "terms" | "assumptions" | "exclusions", index: number, value: string) {
+  function updateStrItem(key: "terms" | "assumptions" | "exclusions" | "outOfScope", index: number, value: string) {
     setFormData(prev => { const arr = [...prev[key]]; arr[index] = value; return { ...prev, [key]: arr } })
   }
 
-  function removeStrItem(key: "terms" | "assumptions" | "exclusions", index: number) {
+  function removeStrItem(key: "terms" | "assumptions" | "exclusions" | "outOfScope", index: number) {
     setFormData(prev => ({ ...prev, [key]: prev[key].filter((_, i) => i !== index) }))
   }
 
@@ -710,6 +714,16 @@ export default function QuotationEditor() {
           </div>
         )}
 
+        {/* ── Out of Scope ── */}
+        {formData.outOfScope.length > 0 && (
+          <div className={forPDF ? "mb-2" : "mb-4"}>
+            <p className={h3cls}>Out of Scope</p>
+            <ul className={`list-disc pl-4 text-gray-700 space-y-0.5 ${sm}`}>
+              {formData.outOfScope.map((o, i) => <li key={i}>{o}</li>)}
+            </ul>
+          </div>
+        )}
+
         {/* ── Terms & Conditions ── */}
         {formData.terms.length > 0 && (
           <div className={forPDF ? "mb-2" : "mb-4"}>
@@ -763,8 +777,16 @@ export default function QuotationEditor() {
           </div>
         )}
 
-        {/* ── Acceptance ── */}
-        <div className={`grid grid-cols-2 gap-6 ${forPDF ? "mt-3 mb-2" : "mt-6 mb-4"}`}>
+        {/* ── Acceptance Clause ── */}
+        <div className={forPDF ? "mb-2 mt-3" : "mb-4 mt-6"}>
+          <p className={h3cls}>Acceptance</p>
+          <p className={`text-gray-700 ${sm}`}>
+            By signing below, the Customer acknowledges that they have reviewed and accepted the scope, pricing, payment terms, and conditions outlined in this quotation.
+          </p>
+        </div>
+
+        {/* ── Signatures ── */}
+        <div className={`grid grid-cols-2 gap-6 ${forPDF ? "mt-3 mb-2" : "mt-4 mb-4"}`}>
           <div>
             <p className={`font-semibold text-gray-700 mb-1 ${sm}`}>Authorized by ({formData.companyInfo.name}):</p>
             <div className="border-b border-gray-400 h-6 mb-1" />
@@ -1069,10 +1091,10 @@ export default function QuotationEditor() {
     // ── Terms ──
     terms: (
       <div className="space-y-4">
-        {(["assumptions", "exclusions", "terms"] as const).map(key => (
+        {(["assumptions", "exclusions", "outOfScope", "terms"] as const).map(key => (
           <div key={key}>
             <p className="text-xs font-semibold text-[#1e40af] uppercase tracking-wide mb-2">
-              {key === "terms" ? "Terms & Conditions" : key.charAt(0).toUpperCase() + key.slice(1)}
+              {key === "terms" ? "Terms & Conditions" : key === "outOfScope" ? "Out of Scope" : key.charAt(0).toUpperCase() + key.slice(1)}
             </p>
             <div className="space-y-2">
               {formData[key].map((item, index) => (
@@ -1088,7 +1110,7 @@ export default function QuotationEditor() {
               ))}
             </div>
             <Button type="button" variant="outline" onClick={() => addStrItem(key)} className="w-full mt-2 flex items-center gap-2 h-8 text-sm border-dashed">
-              <Plus size={14} /> Add {key === "terms" ? "Term" : key.slice(0, -1).charAt(0).toUpperCase() + key.slice(0, -1).slice(1)}
+              <Plus size={14} /> Add {key === "terms" ? "Term" : key === "outOfScope" ? "Out of Scope Item" : key.slice(0, -1).charAt(0).toUpperCase() + key.slice(0, -1).slice(1)}
             </Button>
           </div>
         ))}

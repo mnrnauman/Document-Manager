@@ -247,8 +247,16 @@ export default function Quotation() {
           </p>
         </div>
 
-        {/* Acceptance */}
-        <div className="mb-8 mt-12">
+        {/* Acceptance Clause */}
+        <div className="mb-4 mt-10">
+          <h3 className="font-semibold text-[#1e40af] mb-2 border-b pb-1">Acceptance</h3>
+          <p className="text-gray-700 text-sm">
+            By signing below, the Customer acknowledges that they have reviewed and accepted the scope, pricing, payment terms, and conditions outlined in this quotation.
+          </p>
+        </div>
+
+        {/* Signatures */}
+        <div className="mb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
               <p className="text-gray-700 mb-1">Authorized by (GENCORE):</p>
