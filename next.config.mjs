@@ -13,7 +13,7 @@ const nextConfig = {
     domains: ['hebbkx1anhila5yf.public.blob.vercel-storage.com', 'document.gencoreit.com'],
     unoptimized: true,
   },
-  allowedDevOrigins: ['*.replit.dev', '*.kirk.replit.dev', '*.repl.co'],
+  allowedDevOrigins: ['*.replit.dev', '*.kirk.replit.dev', '*.pike.replit.dev', '*.repl.co'],
   async headers() {
     return [
       {
