@@ -573,6 +573,13 @@ export default function QuotationEditor() {
           </div>
         </div>
 
+        {/* ── Business Description ── */}
+        {formData.companyInfo.description && (
+          <div className={`text-gray-600 italic border-l-2 border-[#1e40af] pl-3 bg-gray-50 py-1.5 rounded-r-md ${forPDF ? "mb-2" : "mb-3"}`} style={{ fontSize: forPDF ? "8px" : "11px" }}>
+            <p>{formData.companyInfo.description}</p>
+          </div>
+        )}
+
         {/* ── Document Title ── */}
         <div className={`text-center ${forPDF ? "mb-2" : "mb-4"}`}>
           <h2 className={`font-extrabold text-[#1e40af] tracking-widest uppercase ${forPDF ? "text-base" : "text-xl"}`}>Quotation</h2>
@@ -689,32 +696,39 @@ export default function QuotationEditor() {
         {/* ── Pricing Table ── */}
         <div className={forPDF ? "mb-2" : "mb-4"}>
           <p className={h3cls}>Pricing</p>
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-[#f97316] text-white">
-                {["#", "Item", "Qty", "Unit", "Unit Price", "Disc %", "Tax %", "Total"].map(h => (
-                  <th key={h} className={`text-left px-1.5 py-1 ${sm} ${h === "Item" ? "w-2/5" : ""}`}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {formData.items.map((item, i) => (
-                <tr key={item.id} className={`border-b border-gray-100 ${i % 2 === 0 ? "bg-white" : "bg-gray-50"}`}>
-                  <td className={`px-1.5 py-1 text-gray-500 ${sm}`}>{i + 1}</td>
-                  <td className={`px-1.5 py-1 ${sm}`}>
-                    <p className="font-medium text-gray-800">{item.name || "—"}</p>
-                    {item.description && <p className="text-gray-500" style={{ fontSize: forPDF ? "8px" : "10px" }}>{item.description}</p>}
-                  </td>
-                  <td className={`px-1.5 py-1 text-gray-700 ${sm}`}>{item.quantity}</td>
-                  <td className={`px-1.5 py-1 text-gray-700 ${sm}`}>{item.unit}</td>
-                  <td className={`px-1.5 py-1 text-gray-700 ${sm}`}>{fmt(item.unitPrice)}</td>
-                  <td className={`px-1.5 py-1 text-gray-700 ${sm}`}>{item.discount > 0 ? `${item.discount}%` : "—"}</td>
-                  <td className={`px-1.5 py-1 text-gray-700 ${sm}`}>{item.taxRate > 0 ? `${item.taxRate}%` : "—"}</td>
-                  <td className={`px-1.5 py-1 font-semibold text-gray-800 ${sm}`}>{fmt(itemLineTotal(item))}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          {(() => {
+            const hasDiscount = formData.items.some(it => it.discount > 0)
+            const hasTax = formData.items.some(it => it.taxRate > 0)
+            const headers = ["#", "Item", "Qty", "Unit", "Unit Price", ...(hasDiscount ? ["Disc %"] : []), ...(hasTax ? ["Tax %"] : []), "Total"]
+            return (
+              <table className="w-full border-collapse">
+                <thead>
+                  <tr className="bg-[#f97316] text-white">
+                    {headers.map(h => (
+                      <th key={h} className={`text-left px-1.5 py-1 ${sm} ${h === "Item" ? "w-2/5" : ""}`}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {formData.items.map((item, i) => (
+                    <tr key={item.id} className={`border-b border-gray-100 ${i % 2 === 0 ? "bg-white" : "bg-gray-50"}`}>
+                      <td className={`px-1.5 py-1 text-gray-500 ${sm}`}>{i + 1}</td>
+                      <td className={`px-1.5 py-1 ${sm}`}>
+                        <p className="font-medium text-gray-800">{item.name || "—"}</p>
+                        {item.description && <p className="text-gray-500" style={{ fontSize: forPDF ? "8px" : "10px" }}>{item.description}</p>}
+                      </td>
+                      <td className={`px-1.5 py-1 text-gray-700 ${sm}`}>{item.quantity}</td>
+                      <td className={`px-1.5 py-1 text-gray-700 ${sm}`}>{item.unit}</td>
+                      <td className={`px-1.5 py-1 text-gray-700 ${sm}`}>{fmt(item.unitPrice)}</td>
+                      {hasDiscount && <td className={`px-1.5 py-1 text-gray-700 ${sm}`}>{item.discount > 0 ? `${item.discount}%` : "—"}</td>}
+                      {hasTax && <td className={`px-1.5 py-1 text-gray-700 ${sm}`}>{item.taxRate > 0 ? `${item.taxRate}%` : "—"}</td>}
+                      <td className={`px-1.5 py-1 font-semibold text-gray-800 ${sm}`}>{fmt(itemLineTotal(item))}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )
+          })()}
           {/* Totals */}
           <div className="flex justify-end mt-1">
             <div className={`border border-gray-200 rounded ${forPDF ? "w-48 p-1" : "w-56 p-2"}`}>
@@ -864,6 +878,9 @@ export default function QuotationEditor() {
             {[formData.companyInfo.phone, formData.companyInfo.email, formData.companyInfo.website].filter(Boolean).join(" | ")}
           </p>
           {formData.companyInfo.ntn && <p className={`text-gray-400 ${sm}`}>NTN: {formData.companyInfo.ntn}{formData.companyInfo.strn ? ` | STRN: ${formData.companyInfo.strn}` : ""}</p>}
+          <p className={`text-gray-400 italic mt-1 ${sm}`}>
+            Confidential – This quotation contains confidential commercial information intended solely for the recipient.
+          </p>
         </div>
       </div>
     )
